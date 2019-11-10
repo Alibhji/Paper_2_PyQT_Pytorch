@@ -18,16 +18,17 @@ from torchsummary import summary
 from collections import defaultdict
 from loss import dice_loss
 
-from my_utils import gui_tools
 from PyQt5 import  QtGui
 
 
-
+import hiddenlayer as hl
 
 
 class SimDataset(Dataset):
-    def __init__(self, count, transform=None):
-        self.input_images, self.target_masks = simulation.generate_random_data(192, 192, count=count)        
+    def __init__(self, count, transform=None , config= None):
+        
+        H_ , W_ = config['img_H'] , config['img_W'] 
+        self.input_images, self.target_masks = simulation.generate_random_data(H_, W_, count=count)        
         self.transform = transform
     
     def __len__(self):
@@ -166,25 +167,42 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, tools=No
     return model
 
 
-
-def training(ui):
-    tools=gui_tools.utils(ui)
-    
+def Dataset_create(ui):
     trans = transforms.Compose([
     transforms.ToTensor(),])
     
-    train_set = SimDataset(200, transform = trans)
-    val_set = SimDataset(100, transform = trans)
+    train_set = SimDataset(ui.config['set_train'], transform = trans, config=ui.config)
+    val_set = SimDataset(ui.config['set_val'], transform = trans, config=ui.config)
+    ui.tools.logging("Datasets are created.",'red')
+    
         
     image_datasets = {
     'train': train_set, 'val': val_set
                                     }
+    
+    ui.image_datasets=image_datasets
+
+def Model_create(ui):
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model=AliNet()
+    ui.model=model.to(device)
+
+    summary(ui.model,input_size=(3,25,25),tools=ui.tools)
+    ui.tools.logging("The model is created.",'red')
+    # hl.build_graph(ui.model, torch.zeros([1, 3, 25, 25]).to(device))
+
+def training(ui):
+    tools=ui.tools
+    
+
+    
+    image_datasets=ui.image_datasets
 
     batch_size = 50
 
     dataloaders = {
-        'train': DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=0),
-        'val': DataLoader(val_set, batch_size=batch_size, shuffle=True, num_workers=0)
+        'train': DataLoader(image_datasets['train'], batch_size=batch_size, shuffle=True, num_workers=0),
+        'val': DataLoader(image_datasets['val'], batch_size=batch_size, shuffle=True, num_workers=0)
     }
 
     dataset_sizes = {
@@ -194,14 +212,9 @@ def training(ui):
     # print(dataset_sizes)
     tools.logging(str(dataset_sizes))
     
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    model=AliNet()
-    model=model.to(device)
-
-    summary(model,input_size=(3,25,25))
     
-    optimizer_ft = optim.Adam(model.parameters(), lr=1e-4)
+    optimizer_ft = optim.Adam(ui.model.parameters(), lr=1e-4)
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=25, gamma=0.1)
     QtGui.QGuiApplication.processEvents()
-    model = train_model(model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=10,tools=tools)
+    ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=10,tools=tools)
