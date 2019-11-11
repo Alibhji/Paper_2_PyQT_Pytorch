@@ -1,3 +1,8 @@
+# A GUI for Pytorch and ptQT5
+# Designed by ALI.BABOLHAVAEJI
+# Detroit-MI-11/11/2019
+
+
 import compile_ui
 from main_ui import Ui_MainWindow
 import sys ,  os
@@ -27,6 +32,8 @@ class AppWindow(QMainWindow):
         self.ui.btn_dataset_gen.clicked.connect(self.dataset_generation)
         self.ui.btn_model_gen.clicked.connect(self.model_generation)
         self.ui.btn_model_arch.clicked.connect(self.model_archi_btn)
+        self.ui.btn_plot_imgs.clicked.connect(self.plot_btn)
+        
         self.config={}
         self.config_update()
         self.tools=gui_tools.utils(self)       
@@ -38,6 +45,9 @@ class AppWindow(QMainWindow):
         self.config.update({'set_val': int(self.ui.in_val_dataset.text())})
         
         self.ui.btn_train.setDisabled([True,False][hasattr(self,'image_datasets') and hasattr(self,'model')])
+        self.ui.btn_plot_imgs.setDisabled([True,False][hasattr(self,'image_datasets')])
+
+
     
 
         
@@ -54,6 +64,7 @@ class AppWindow(QMainWindow):
         self.config_update()
         
     
+
     def model_generation(self):
         self.config_update()
         Model_create(self)
@@ -61,7 +72,13 @@ class AppWindow(QMainWindow):
         
  
     def model_archi_btn(self):
-        model_architecture(self)       
+        model_architecture(self)    
+        
+    def plot_btn(self):
+        self.tools.plotting(self) 
+        self.tools.logging(str(list(self.image_datasets['train'])[0][0].numpy().shape),'red')
+
+        
 
 
 
@@ -69,3 +86,4 @@ app=QApplication(sys.argv)
 win=AppWindow()
 win.show()
 sys.exit(app.exec())
+

@@ -85,8 +85,11 @@ class Ui_MainWindow(object):
         self.btn_model_gen.setGeometry(QtCore.QRect(10, 220, 93, 28))
         self.btn_model_gen.setObjectName("btn_model_gen")
         self.btn_model_arch = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_model_arch.setGeometry(QtCore.QRect(30, 340, 93, 28))
+        self.btn_model_arch.setGeometry(QtCore.QRect(160, 30, 93, 28))
         self.btn_model_arch.setObjectName("btn_model_arch")
+        self.btn_plot_imgs = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_plot_imgs.setGeometry(QtCore.QRect(160, 80, 93, 28))
+        self.btn_plot_imgs.setObjectName("btn_plot_imgs")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1001, 26))
@@ -116,4 +119,5 @@ class Ui_MainWindow(object):
         self.btn_train.setText(_translate("MainWindow", "Train"))
         self.btn_model_gen.setText(_translate("MainWindow", "Model"))
         self.btn_model_arch.setText(_translate("MainWindow", "Design model"))
+        self.btn_plot_imgs.setText(_translate("MainWindow", "Plot images"))
 

@@ -56,29 +56,7 @@ def convrelu(in_channels, out_channels, kernel, padding):
         nn.ReLU(inplace=True),
     )
 
-class AliNet(nn.Module):
 
-    def __init__(self, architect_file=None):
-        super().__init__()
-        
-        if (architect_file):
-            self.conv1=eval(architect_file)
-            print(";;;")
-        else :
-            self.conv1=nn.Conv2d(3,6,3,padding=1)
-            
-        self.conv2=nn.Conv2d(6,6,3,padding=1)
-        self.out=nn.Conv2d(6,6,3,padding=1)
-        
-        
-        
-    def forward(self, input):
-        x=self.conv1(input)
-        x=self.conv2(x)
-        x=self.out(x)        
-               
-        
-        return x
 
 
 
@@ -235,7 +213,44 @@ def model_architecture(ui):
     input_ch=list([3])
     out_ch  =list([5,7,9])
     for ch in out_ch:
-        conv='nn.Conv2d( {}, {}, {}, padding={})'.format('3','6',str(ch),str(int(ch/2)))
+        conv=[]
+        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('3','6',str(ch),str(int(ch/2))))
+        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
+        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
+        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
+        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
         Model_create(ui,architect_file=conv)
-        ui.tools.logging(conv)
-        print(conv)
+        ui.tools.logging(str(conv))
+        print(str(conv))
+        
+        
+class AliNet(nn.Module):
+    
+    def __init__(self, architect_file=None):
+        super().__init__()
+        self.convlen=0
+        
+        if (architect_file):
+            # self.conv=(eval(architect_file))
+            for idx,layer in enumerate(architect_file):
+                exec('self.conv{}='.format(idx)+str(architect_file[idx]))
+            self.convlen=len(architect_file)
+        else :
+            self.conv0=nn.Conv2d(3,6,3,padding=1)
+            self.conv1=nn.Conv2d(6,6,3,padding=1)
+            self.conv2=nn.Conv2d(6,6,3,padding=1)
+            self.convlen=3
+            
+
+        
+        
+        
+    def forward(self, x):
+        # x=eval('self.conv0(x)')
+        # x=self.conv1(x)
+        # x=self.conv2(x) 
+        for layer in range(self.convlen):
+            x=eval('self.conv{}(x)'.format(layer))      
+               
+        
+        return x        

@@ -200,14 +200,27 @@
    <widget class="QPushButton" name="btn_model_arch">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>340</y>
+      <x>160</x>
+      <y>30</y>
       <width>93</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
      <string>Design model</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_plot_imgs">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>80</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Plot images</string>
     </property>
    </widget>
   </widget>
