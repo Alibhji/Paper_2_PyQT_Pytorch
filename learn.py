@@ -1,3 +1,4 @@
+import os
 
 import numpy as np
 import helper
@@ -175,7 +176,8 @@ def Model_create(ui,architect_file=None):
         model=AliNet()
     ui.model=model.to(device)
 
-    summary(ui.model,input_size=(3,25,25),tools=ui.tools)
+    # summary(ui.model,input_size=(3,25,25),tools=ui.tools)
+    summary(ui.model, input_size=(3, 25, 25))
     ui.tools.logging("The model is created.",'red')
     # hl.build_graph(ui.model, torch.zeros([1, 3, 25, 25]).to(device))
 
@@ -206,22 +208,34 @@ def training(ui):
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=25, gamma=0.1)
     QtGui.QGuiApplication.processEvents()
     ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=10,tools=tools)
-    
-    
-    
+
+
+
 def model_architecture(ui):
     input_ch=list([3])
-    out_ch  =list([5,7,9])
-    for ch in out_ch:
+    out_ch  =list([5,7,9,11,13,15])
+    ui.module_dir_name='designed_module'
+    root=os.path.join(os.getcwd(),ui.module_dir_name)
+    ui.tools.check_dir(ui.module_dir_name,create_dir=True)
+
+    for out__ in out_ch:
+        in__=input_ch[0]
+        k__=3
+        p__=int(k__/2)
         conv=[]
-        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('3','6',str(ch),str(int(ch/2))))
-        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
-        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
-        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
-        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
+        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(in__,out__,k__,p__))
+        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(out__, out__, k__, p__))
+        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(out__, 6, k__, p__))
+        # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
+        # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
+        # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
+        # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
         Model_create(ui,architect_file=conv)
         ui.tools.logging(str(conv))
         print(str(conv))
+        File_name=os.path.join(root,'Module_{}L_{}ich_{}och_{}k_{}p.txt'.format(len(conv),in__,out__,k__,p__))
+        with open(File_name , 'w') as f:
+            f.writelines('\n'.join(conv[0:]))
         
         
 class AliNet(nn.Module):

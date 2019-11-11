@@ -1,3 +1,5 @@
+import os
+
 from  PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5.QtGui import QColor
 
@@ -27,17 +29,25 @@ class utils():
             self.ui.ui.textBrowser.setTextColor(self.red)
             self.ui.ui.textBrowser.append(message)
             self.ui.ui.textBrowser.setTextColor(self.black)
-    
+
     def plotting(self,ui):
         fig = plt.figure(figsize=(9, 15))
         gs = gridspec.GridSpec(nrows=4, ncols=4)
-        
+
         for i in range(4):
             for j in range(4):
                 ax = fig.add_subplot(gs[j, i])
                 ax.imshow(list(ui.image_datasets['train'])[i][0].numpy()[1,:,:])
             # ax.set_title(title[i])
         plt.show()
-        
+
+    def check_dir(self,name, root='./' , create_dir=None):
+        file = os.path.join(root,name)
+
+        exist= [True,False][os.path.exists(file)]
+        if create_dir and exist :
+            os.makedirs(file)
+
+
 
 

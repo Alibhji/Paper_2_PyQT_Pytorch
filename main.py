@@ -39,7 +39,7 @@ class AppWindow(QMainWindow):
         
         self.config={}
         self.config_update()
-        self.tools=gui_tools.utils(self)       
+        self.tools=gui_tools.utils(self)
     
     def config_update(self):
         self.config.update({'img_H': int(self.ui.in_img_H.text())})
@@ -78,8 +78,9 @@ class AppWindow(QMainWindow):
         model_architecture(self)    
         
     def plot_btn(self):
-        self.tools.plotting(self) 
+        self.tools.plotting(self)
         self.tools.logging(str(list(self.image_datasets['train'])[0][0].numpy().shape),'red')
+        # self.tools.check_dir('test/123',create_dir=True)
 
         
 
