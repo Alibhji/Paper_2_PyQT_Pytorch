@@ -2,6 +2,9 @@
 # Designed by ALI.BABOLHAVAEJI
 # Detroit-MI-11/11/2019
 
+# to conver UI to py file in Ununtu you need install the following package first
+# sudo apt-get install qtcreator pyqt5-dev-tools
+# then uncomment the the following line
 
 import compile_ui
 from main_ui import Ui_MainWindow

@@ -21,7 +21,7 @@ from loss import dice_loss
 from PyQt5 import  QtGui
 
 
-import hiddenlayer as hl
+# import hiddenlayer as hl
 
 
 class SimDataset(Dataset):

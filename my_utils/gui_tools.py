@@ -31,11 +31,13 @@ class utils():
     def plotting(self,ui):
         fig = plt.figure(figsize=(9, 15))
         gs = gridspec.GridSpec(nrows=4, ncols=4)
-        plt.show()
+        
         for i in range(4):
             for j in range(4):
                 ax = fig.add_subplot(gs[j, i])
                 ax.imshow(list(ui.image_datasets['train'])[i][0].numpy()[1,:,:])
             # ax.set_title(title[i])
+        plt.show()
+        
 
 
