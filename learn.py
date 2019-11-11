@@ -139,14 +139,15 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, tools=No
             if phase == 'val' and epoch_loss < best_loss:
                 print("saving best model")
                 best_loss = epoch_loss
+                bset_epoch= epoch
                 best_model_wts = copy.deepcopy(model.state_dict())
 
         time_elapsed = time.time() - since
         print('{:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
         tools.logging('{:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
         QtGui.QGuiApplication.processEvents()
-    print('Best val loss: {:4f}'.format(best_loss))
-    tools.logging('Best val loss: {:4f}'.format(best_loss))
+    print('Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch))
+    tools.logging('Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch),'red')
     # load best model weights
     model.load_state_dict(best_model_wts)
     return model
@@ -207,7 +208,7 @@ def training(ui):
     optimizer_ft = optim.Adam(ui.model.parameters(), lr=1e-4)
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=25, gamma=0.1)
     QtGui.QGuiApplication.processEvents()
-    ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=10,tools=tools)
+    ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=30,tools=tools)
 
 
 
