@@ -75,25 +75,44 @@ def calc_loss(pred, target, metrics, bce_weight=0.5):
     
     return loss
 
-def print_metrics(metrics, epoch_samples, phase,tools=None):    
+def print_metrics(metrics, epoch_samples, phase,ui=None):
     outputs = []
     for k in metrics.keys():
         outputs.append("{}: {:4f}".format(k, metrics[k] / epoch_samples))
         
     print("{}: {}".format(phase, ", ".join(outputs)))
-    tools.logging("{}: {}".format(phase, ", ".join(outputs)))    
+    ui.tools.logging("{}: {}".format(phase, ", ".join(outputs)))
+    return outputs
 
-def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, tools=None):
+def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None):
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    # if(ui.tools.check_dir(ui.module_dir_name)):
+    # with open(ui.model_txt_file, 'a') as f:
+    #     f.writelines('\n'+ '*'*30)
+
+    flag_gen_txt=[True,False][hasattr(ui,'model_txt_file')]
+    txt_file_content=''
+
+    if(flag_gen_txt):
+        txt_file_content=ui.model_txt_file
+    txt_file_content+='\n' + '*' * 30 + '\n'
+
+
     for epoch in range(num_epochs):
+
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
-        tools.logging('Epoch {}/{}'.format(epoch, num_epochs - 1))
-        tools.logging('-' * 10)
-        
+
+        ui.tools.logging('Epoch {}/{}'.format(epoch, num_epochs - 1))
+        ui.tools.logging('-' * 10)
+
+        txt_file_content+=('\n'+ 'Epoch {}/{}'.format(epoch, num_epochs - 1))
+        txt_file_content+=('\n'+ '-' * 10)
+
+
         since = time.time()
 
         # Each epoch has a training and validation phase
@@ -102,18 +121,19 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, tools=No
                 scheduler.step()
                 for param_group in optimizer.param_groups:
                     print("LR", param_group['lr'])
-                    tools.logging("LR {}".format(param_group['lr']))
-                    
+                    ui.tools.logging("LR {}".format(param_group['lr']))
+                    txt_file_content+=('\n' + "LR {}".format(param_group['lr']))
+
                 model.train()  # Set model to training mode
             else:
                 model.eval()   # Set model to evaluate mode
 
             metrics = defaultdict(float)
             epoch_samples = 0
-            
+
             for inputs, labels in dataloaders[phase]:
                 inputs = inputs.to(device)
-                labels = labels.to(device)             
+                labels = labels.to(device)
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
@@ -132,7 +152,9 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, tools=No
                 # statistics
                 epoch_samples += inputs.size(0)
 
-            print_metrics(metrics, epoch_samples, phase,tools)
+            print_out=print_metrics(metrics, epoch_samples, phase,ui)
+            txt_file_content+=('\n' + "{}: {}".format(phase, ", ".join(print_out)))
+
             epoch_loss = metrics['loss'] / epoch_samples
 
             # deep copy the model
@@ -144,10 +166,18 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, tools=No
 
         time_elapsed = time.time() - since
         print('{:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
-        tools.logging('{:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+        ui.tools.logging('{:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+        txt_file_content+=('\n' + '{:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+
         QtGui.QGuiApplication.processEvents()
     print('Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch))
-    tools.logging('Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch),'red')
+    ui.tools.logging('Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch),'red')
+    txt_file_content+=('\n' + 'Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch))
+    if (flag_gen_txt):
+        with open(ui.model_txt_file, 'a') as f:
+            f.writelines('\n' + '*' * 30 +'\n'+txt_file_content)
+
+
     # load best model weights
     model.load_state_dict(best_model_wts)
     return model
@@ -208,7 +238,7 @@ def training(ui):
     optimizer_ft = optim.Adam(ui.model.parameters(), lr=1e-4)
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=25, gamma=0.1)
     QtGui.QGuiApplication.processEvents()
-    ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=30,tools=tools)
+    ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=10,ui=ui)
 
 
 
@@ -234,8 +264,8 @@ def model_architecture(ui):
         Model_create(ui,architect_file=conv)
         ui.tools.logging(str(conv))
         print(str(conv))
-        File_name=os.path.join(root,'Module_{}L_{}ich_{}och_{}k_{}p.txt'.format(len(conv),in__,out__,k__,p__))
-        with open(File_name , 'w') as f:
+        ui.model_txt_file=os.path.join(root,'Module_{}L_{}ich_{}och_{}k_{}p.txt'.format(len(conv),in__,out__,k__,p__))
+        with open(ui.model_txt_file , 'w') as f:
             f.writelines('\n'.join(conv[0:]))
         
         
