@@ -58,9 +58,15 @@ def convrelu(in_channels, out_channels, kernel, padding):
 
 class AliNet(nn.Module):
 
-    def __init__(self):
+    def __init__(self, architect_file=None):
         super().__init__()
-        self.conv1=nn.Conv2d(3,6,3,padding=1)
+        
+        if (architect_file):
+            self.conv1=eval(architect_file)
+            print(";;;")
+        else :
+            self.conv1=nn.Conv2d(3,6,3,padding=1)
+            
         self.conv2=nn.Conv2d(6,6,3,padding=1)
         self.out=nn.Conv2d(6,6,3,padding=1)
         
@@ -182,9 +188,13 @@ def Dataset_create(ui):
     
     ui.image_datasets=image_datasets
 
-def Model_create(ui):
+def Model_create(ui,architect_file=None):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model=AliNet()
+    if(architect_file):
+        model=AliNet(architect_file=architect_file)
+
+    else:
+        model=AliNet()
     ui.model=model.to(device)
 
     summary(ui.model,input_size=(3,25,25),tools=ui.tools)
@@ -218,3 +228,14 @@ def training(ui):
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=25, gamma=0.1)
     QtGui.QGuiApplication.processEvents()
     ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=10,tools=tools)
+    
+    
+    
+def model_architecture(ui):
+    input_ch=list([3])
+    out_ch  =list([5,7,9])
+    for ch in out_ch:
+        conv='nn.Conv2d( {}, {}, {}, padding={})'.format('3','6',str(ch),str(int(ch/2)))
+        Model_create(ui,architect_file=conv)
+        ui.tools.logging(conv)
+        print(conv)

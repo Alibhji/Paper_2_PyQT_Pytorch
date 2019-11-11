@@ -4,7 +4,7 @@ import sys ,  os
 
 from PyQt5.QtWidgets import QApplication , QMainWindow
 
-from learn import SimDataset,AliNet, train_model,training ,Dataset_create ,Model_create
+from learn import SimDataset,AliNet, train_model,training ,Dataset_create ,Model_create ,model_architecture
 
 import time
 import copy
@@ -26,6 +26,7 @@ class AppWindow(QMainWindow):
         self.ui.btn_train.clicked.connect(self.train)
         self.ui.btn_dataset_gen.clicked.connect(self.dataset_generation)
         self.ui.btn_model_gen.clicked.connect(self.model_generation)
+        self.ui.btn_model_arch.clicked.connect(self.model_archi_btn)
         self.config={}
         self.config_update()
         self.tools=gui_tools.utils(self)       
@@ -36,13 +37,8 @@ class AppWindow(QMainWindow):
         self.config.update({'set_train': int(self.ui.in_train_dataset.text())})
         self.config.update({'set_val': int(self.ui.in_val_dataset.text())})
         
-        self.ui.btn_train.setDisabled([True,False][hasattr(self,'image_datasets')])
-        self.ui.btn_train.setDisabled([True,False][hasattr(self,'model')])
-
-
-
-
-
+        self.ui.btn_train.setDisabled([True,False][hasattr(self,'image_datasets') and hasattr(self,'model')])
+    
 
         
     def train(self):  
@@ -61,10 +57,11 @@ class AppWindow(QMainWindow):
     def model_generation(self):
         self.config_update()
         Model_create(self)
-        
         self.config_update()
         
-        
+ 
+    def model_archi_btn(self):
+        model_architecture(self)       
 
 
 
