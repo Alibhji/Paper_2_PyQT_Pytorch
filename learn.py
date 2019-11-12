@@ -22,6 +22,7 @@ from loss import dice_loss
 from PyQt5 import  QtGui
 
 
+
 # import hiddenlayer as hl
 
 
@@ -88,6 +89,7 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(model)
 
     # if(ui.tools.check_dir(ui.module_dir_name)):
     # with open(ui.model_txt_file, 'a') as f:
@@ -252,9 +254,10 @@ def model_architecture(ui):
     ui.module_dir_name='designed_module'
     root=os.path.join(os.getcwd(),ui.module_dir_name)
     ui.tools.check_dir(ui.module_dir_name,create_dir=True)
-    model_dic={}
+
 
     for out__ in out_ch:
+        model_dic = {}
         in__=input_ch[0]
         k__=3
         p__=int(k__/2)
@@ -271,8 +274,10 @@ def model_architecture(ui):
 
         ui.tools.logging(str(conv))
         print(str(conv))
-        Module_name= 'Module_{}L_{}ich_{}och_{}k_{}p.txt'.format(len(conv),in__,out__,k__,p__)
-        ui.model_txt_file=os.path.join(root,Module_name)
+
+        Module_name= 'Module_{}L_{}ich_{}och_{}k_{}p'.format(len(conv),in__,out__,k__,p__)
+        # print(Module_name)
+        ui.model_txt_file=os.path.join(root,Module_name+'.txt')
 
         model_dic.update({'name':Module_name})
         model_dic.update({'text_log': ui.model_txt_file})
@@ -287,7 +292,8 @@ def model_architecture(ui):
             f.writelines('\n'.join(conv[0:]))
 
     ui.tools.fill_out_table(ui.modelList)
-        
+    # print(ui.modelList)
+
 class AliNet(nn.Module):
     
     def __init__(self, architect_file=None):

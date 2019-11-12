@@ -19,7 +19,7 @@ import copy
 
 from torchsummary import summary
 from my_utils import gui_tools
-
+# from collections import OrderedDict
 
 
 class AppWindow(QMainWindow):
@@ -36,6 +36,7 @@ class AppWindow(QMainWindow):
         self.ui.btn_model_gen.clicked.connect(self.model_generation)
         self.ui.btn_model_arch.clicked.connect(self.model_archi_btn)
         self.ui.btn_plot_imgs.clicked.connect(self.plot_btn)
+        self.ui.tableWidget.cellClicked.connect(self.showCell)
         
         self.config={}
         self.modelList ={}
@@ -43,11 +44,12 @@ class AppWindow(QMainWindow):
         self.tools=gui_tools.utils(self)
 
         self.ui.tableWidget.setColumnCount(4)
-        self.ui.tableWidget.setColumnWidth(0,250)
+
         self.ui.tableWidget.setColumnWidth(1, 250)
         self.ui.tableWidget.setColumnWidth(2, 250)
         self.ui.tableWidget.setColumnWidth(3, 250)
         self.ui.tableWidget.setRowCount(1)
+        self.ui.tableWidget.setColumnWidth(0, 250)
     
     def config_update(self):
         self.config.update({'img_H': int(self.ui.in_img_H.text())})
@@ -60,6 +62,12 @@ class AppWindow(QMainWindow):
 
 
     
+    def showCell(self,row,col):
+        model_name=self.ui.tableWidget.item(row,col).text()
+        print(row,col,self.ui.tableWidget.item(row,col).text())
+        self.model=self.modelList[model_name]['model']
+
+
 
         
     def train(self):  
@@ -84,6 +92,7 @@ class AppWindow(QMainWindow):
         
  
     def model_archi_btn(self):
+        self.modelList={}
         model_architecture(self)    
         
     def plot_btn(self):

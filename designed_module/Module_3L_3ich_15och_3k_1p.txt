@@ -1,3 +1,198 @@
 nn.Conv2d( 3, 15, 3, padding=1)
 nn.Conv2d( 15, 15, 3, padding=1)
 nn.Conv2d( 15, 6, 3, padding=1)
+******************************
+/home/ali/Alibhji/Paper_2_PyQT_Pytorch/designed_module/Module_3L_3ich_15och_3k_1p.txt
+******************************
+
+Epoch 0/9
+----------
+LR 0.0001
+train: loss: 0.865846, bce: 0.740854, dice: 0.990838
+val: loss: 0.865208, bce: 0.739727, dice: 0.990689
+0m 0s
+Epoch 1/9
+----------
+LR 0.0001
+train: loss: 0.864950, bce: 0.739087, dice: 0.990813
+val: loss: 0.864323, bce: 0.737983, dice: 0.990664
+0m 0s
+Epoch 2/9
+----------
+LR 0.0001
+train: loss: 0.864070, bce: 0.737353, dice: 0.990787
+val: loss: 0.863455, bce: 0.736273, dice: 0.990638
+0m 0s
+Epoch 3/9
+----------
+LR 0.0001
+train: loss: 0.863207, bce: 0.735654, dice: 0.990760
+val: loss: 0.862604, bce: 0.734598, dice: 0.990610
+0m 0s
+Epoch 4/9
+----------
+LR 0.0001
+train: loss: 0.862361, bce: 0.733991, dice: 0.990731
+val: loss: 0.861770, bce: 0.732959, dice: 0.990582
+0m 0s
+Epoch 5/9
+----------
+LR 0.0001
+train: loss: 0.861532, bce: 0.732362, dice: 0.990702
+val: loss: 0.860954, bce: 0.731354, dice: 0.990553
+0m 0s
+Epoch 6/9
+----------
+LR 0.0001
+train: loss: 0.860720, bce: 0.730769, dice: 0.990672
+val: loss: 0.860153, bce: 0.729783, dice: 0.990523
+0m 0s
+Epoch 7/9
+----------
+LR 0.0001
+train: loss: 0.859925, bce: 0.729208, dice: 0.990642
+val: loss: 0.859369, bce: 0.728245, dice: 0.990493
+0m 0s
+Epoch 8/9
+----------
+LR 0.0001
+train: loss: 0.859145, bce: 0.727679, dice: 0.990610
+val: loss: 0.858600, bce: 0.726738, dice: 0.990462
+0m 0s
+Epoch 9/9
+----------
+LR 0.0001
+train: loss: 0.858379, bce: 0.726181, dice: 0.990578
+val: loss: 0.857845, bce: 0.725259, dice: 0.990430
+0m 0s
+Best val loss: 0.857845 at 9 epoch.
+******************************
+/home/ali/Alibhji/Paper_2_PyQT_Pytorch/designed_module/Module_3L_3ich_15och_3k_1p.txt
+******************************
+
+Epoch 0/9
+----------
+LR 0.0001
+train: loss: 0.842841, bce: 0.695133, dice: 0.990549
+val: loss: 0.841851, bce: 0.693299, dice: 0.990404
+0m 0s
+Epoch 1/9
+----------
+LR 0.0001
+train: loss: 0.841379, bce: 0.692211, dice: 0.990546
+val: loss: 0.840407, bce: 0.690413, dice: 0.990401
+0m 0s
+Epoch 2/9
+----------
+LR 0.0001
+train: loss: 0.839946, bce: 0.689348, dice: 0.990543
+val: loss: 0.838992, bce: 0.687586, dice: 0.990398
+0m 0s
+Epoch 3/9
+----------
+LR 0.0001
+train: loss: 0.838541, bce: 0.686542, dice: 0.990540
+val: loss: 0.837605, bce: 0.684817, dice: 0.990393
+0m 0s
+Epoch 4/9
+----------
+LR 0.0001
+train: loss: 0.837164, bce: 0.683792, dice: 0.990536
+val: loss: 0.836245, bce: 0.682101, dice: 0.990389
+0m 0s
+Epoch 5/9
+----------
+LR 0.0001
+train: loss: 0.835813, bce: 0.681094, dice: 0.990532
+val: loss: 0.834908, bce: 0.679432, dice: 0.990385
+0m 0s
+Epoch 6/9
+----------
+LR 0.0001
+train: loss: 0.834484, bce: 0.678440, dice: 0.990528
+val: loss: 0.833592, bce: 0.676802, dice: 0.990382
+0m 0s
+Epoch 7/9
+----------
+LR 0.0001
+train: loss: 0.833173, bce: 0.675821, dice: 0.990525
+val: loss: 0.832291, bce: 0.674202, dice: 0.990380
+0m 0s
+Epoch 8/9
+----------
+LR 0.0001
+train: loss: 0.831876, bce: 0.673228, dice: 0.990523
+val: loss: 0.831000, bce: 0.671621, dice: 0.990378
+0m 0s
+Epoch 9/9
+----------
+LR 0.0001
+train: loss: 0.830587, bce: 0.670652, dice: 0.990522
+val: loss: 0.829714, bce: 0.669051, dice: 0.990378
+0m 0s
+Best val loss: 0.829714 at 9 epoch.
+******************************
+/home/ali/Alibhji/Paper_2_PyQT_Pytorch/designed_module/Module_3L_3ich_15och_3k_1p.txt
+******************************
+
+Epoch 0/9
+----------
+LR 0.0001
+train: loss: 0.833326, bce: 0.676023, dice: 0.990629
+val: loss: 0.831925, bce: 0.673321, dice: 0.990529
+0m 0s
+Epoch 1/9
+----------
+LR 0.0001
+train: loss: 0.831160, bce: 0.671662, dice: 0.990657
+val: loss: 0.829769, bce: 0.668981, dice: 0.990558
+0m 0s
+Epoch 2/9
+----------
+LR 0.0001
+train: loss: 0.829007, bce: 0.667328, dice: 0.990686
+val: loss: 0.827618, bce: 0.664648, dice: 0.990588
+0m 0s
+Epoch 3/9
+----------
+LR 0.0001
+train: loss: 0.826849, bce: 0.662984, dice: 0.990715
+val: loss: 0.825447, bce: 0.660276, dice: 0.990618
+0m 0s
+Epoch 4/9
+----------
+LR 0.0001
+train: loss: 0.824663, bce: 0.658582, dice: 0.990744
+val: loss: 0.823232, bce: 0.655813, dice: 0.990651
+0m 0s
+Epoch 5/9
+----------
+LR 0.0001
+train: loss: 0.822422, bce: 0.654067, dice: 0.990777
+val: loss: 0.820945, bce: 0.651204, dice: 0.990687
+0m 0s
+Epoch 6/9
+----------
+LR 0.0001
+train: loss: 0.820101, bce: 0.649388, dice: 0.990813
+val: loss: 0.818562, bce: 0.646398, dice: 0.990726
+0m 0s
+Epoch 7/9
+----------
+LR 0.0001
+train: loss: 0.817673, bce: 0.644493, dice: 0.990853
+val: loss: 0.816059, bce: 0.641347, dice: 0.990771
+0m 0s
+Epoch 8/9
+----------
+LR 0.0001
+train: loss: 0.815119, bce: 0.639338, dice: 0.990900
+val: loss: 0.813415, bce: 0.636008, dice: 0.990823
+0m 0s
+Epoch 9/9
+----------
+LR 0.0001
+train: loss: 0.812415, bce: 0.633878, dice: 0.990953
+val: loss: 0.810611, bce: 0.630339, dice: 0.990883
+0m 0s
+Best val loss: 0.810611 at 9 epoch.
