@@ -94,8 +94,8 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
     #     f.writelines('\n'+ '*'*30)
 
     flag_gen_txt=hasattr(ui,'model_txt_file')
-    print('??????????????---->>>>>>',flag_gen_txt)
-    print('??????????????---->>>>>>', ui.model_txt_file)
+    # print('??????????????---->>>>>>',len(ui.modelList))
+    # print('??????????????---->>>>>>', ui.model_txt_file)
     txt_file_content=''
 
     if(flag_gen_txt):
@@ -207,12 +207,14 @@ def Model_create(ui,architect_file=None):
 
     else:
         model=AliNet()
-    ui.model=model.to(device)
+    model=model.to(device)
 
     # summary(ui.model,input_size=(3,25,25),tools=ui.tools)
-    summary(ui.model, input_size=(3, 25, 25))
+    summary(model, input_size=(3, 25, 25))
     ui.tools.logging("The model is created.",'red')
     # hl.build_graph(ui.model, torch.zeros([1, 3, 25, 25]).to(device))
+    ui.model = model.to(device)
+    return model.to(device)
 
 def training(ui):
     tools=ui.tools
@@ -264,7 +266,9 @@ def model_architecture(ui):
         # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
         # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
         # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
-        Model_create(ui,architect_file=conv)
+
+        model=Model_create(ui,architect_file=conv)
+
         ui.tools.logging(str(conv))
         print(str(conv))
         Module_name= 'Module_{}L_{}ich_{}och_{}k_{}p.txt'.format(len(conv),in__,out__,k__,p__)
@@ -273,12 +277,16 @@ def model_architecture(ui):
         model_dic.update({'name':Module_name})
         model_dic.update({'text_log': ui.model_txt_file})
         model_dic.update({'struct':conv})
+        model_dic.update({'model': model})
+
+
 
         ui.modelList.update({Module_name : model_dic})
 
         with open(ui.model_txt_file , 'w') as f:
             f.writelines('\n'.join(conv[0:]))
-        
+
+    ui.tools.fill_out_table(ui.modelList)
         
 class AliNet(nn.Module):
     

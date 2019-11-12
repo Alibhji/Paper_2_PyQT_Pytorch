@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>826</width>
-    <height>732</height>
+    <width>1390</width>
+    <height>896</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QTextBrowser" name="textBrowser">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>10</y>
-      <width>541</width>
-      <height>651</height>
+      <x>10</x>
+      <y>690</y>
+      <width>501</width>
+      <height>151</height>
      </rect>
     </property>
    </widget>
@@ -223,13 +223,23 @@
      <string>Plot images</string>
     </property>
    </widget>
+   <widget class="QTableWidget" name="tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>30</y>
+      <width>1131</width>
+      <height>491</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>826</width>
+     <width>1390</width>
      <height>22</height>
     </rect>
    </property>

@@ -41,6 +41,13 @@ class AppWindow(QMainWindow):
         self.modelList ={}
         self.config_update()
         self.tools=gui_tools.utils(self)
+
+        self.ui.tableWidget.setColumnCount(4)
+        self.ui.tableWidget.setColumnWidth(0,250)
+        self.ui.tableWidget.setColumnWidth(1, 250)
+        self.ui.tableWidget.setColumnWidth(2, 250)
+        self.ui.tableWidget.setColumnWidth(3, 250)
+        self.ui.tableWidget.setRowCount(1)
     
     def config_update(self):
         self.config.update({'img_H': int(self.ui.in_img_H.text())})

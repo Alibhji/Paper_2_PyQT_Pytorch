@@ -2,6 +2,7 @@ import os
 
 from  PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import  QTableWidgetItem
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -50,4 +51,10 @@ class utils():
 
 
 
+    def fill_out_table(self, dict_data):
+
+        self.ui.ui.tableWidget.setRowCount(len(dict_data))
+        for row, row_data in enumerate(dict_data.items()):
+            for col , data in enumerate(row_data[1].items()):
+                self.ui.ui.tableWidget.setItem(row,col,QTableWidgetItem(str(data[1])))
 
