@@ -93,7 +93,9 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
     # with open(ui.model_txt_file, 'a') as f:
     #     f.writelines('\n'+ '*'*30)
 
-    flag_gen_txt=[True,False][hasattr(ui,'model_txt_file')]
+    flag_gen_txt=hasattr(ui,'model_txt_file')
+    print('??????????????---->>>>>>',flag_gen_txt)
+    print('??????????????---->>>>>>', ui.model_txt_file)
     txt_file_content=''
 
     if(flag_gen_txt):
@@ -248,6 +250,7 @@ def model_architecture(ui):
     ui.module_dir_name='designed_module'
     root=os.path.join(os.getcwd(),ui.module_dir_name)
     ui.tools.check_dir(ui.module_dir_name,create_dir=True)
+    model_dic={}
 
     for out__ in out_ch:
         in__=input_ch[0]
@@ -264,7 +267,15 @@ def model_architecture(ui):
         Model_create(ui,architect_file=conv)
         ui.tools.logging(str(conv))
         print(str(conv))
-        ui.model_txt_file=os.path.join(root,'Module_{}L_{}ich_{}och_{}k_{}p.txt'.format(len(conv),in__,out__,k__,p__))
+        Module_name= 'Module_{}L_{}ich_{}och_{}k_{}p.txt'.format(len(conv),in__,out__,k__,p__)
+        ui.model_txt_file=os.path.join(root,Module_name)
+
+        model_dic.update({'name':Module_name})
+        model_dic.update({'text_log': ui.model_txt_file})
+        model_dic.update({'struct':conv})
+
+        ui.modelList.update({Module_name : model_dic})
+
         with open(ui.model_txt_file , 'w') as f:
             f.writelines('\n'.join(conv[0:]))
         

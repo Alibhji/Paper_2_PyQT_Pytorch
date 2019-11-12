@@ -38,6 +38,7 @@ class AppWindow(QMainWindow):
         self.ui.btn_plot_imgs.clicked.connect(self.plot_btn)
         
         self.config={}
+        self.modelList ={}
         self.config_update()
         self.tools=gui_tools.utils(self)
     
@@ -47,8 +48,8 @@ class AppWindow(QMainWindow):
         self.config.update({'set_train': int(self.ui.in_train_dataset.text())})
         self.config.update({'set_val': int(self.ui.in_val_dataset.text())})
         
-        self.ui.btn_train.setDisabled([True,False][hasattr(self,'image_datasets') and hasattr(self,'model')])
-        self.ui.btn_plot_imgs.setDisabled([True,False][hasattr(self,'image_datasets')])
+        self.ui.btn_train.setDisabled(not (hasattr(self,'image_datasets') and hasattr(self,'model')))
+        self.ui.btn_plot_imgs.setDisabled(not hasattr(self,'image_datasets'))
 
 
     
@@ -59,6 +60,7 @@ class AppWindow(QMainWindow):
         training(self)
         print(len(self.image_datasets['train']))
         self.config_update()
+        # print(self.modelList)
         
         
     def dataset_generation(self):
