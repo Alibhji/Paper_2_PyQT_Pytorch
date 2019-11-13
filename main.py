@@ -37,11 +37,16 @@ class AppWindow(QMainWindow):
         self.ui.btn_model_arch.clicked.connect(self.model_archi_btn)
         self.ui.btn_plot_imgs.clicked.connect(self.plot_btn)
         self.ui.tableWidget.cellClicked.connect(self.showCell)
-        
+
+        # this is a place holder for the data set cofiguration --> img_H, img_W, num of train and val set ...
+        self.modelList = {}
+        # it holds the generated model by the program
         self.config={}
-        self.modelList ={}
         self.config_update()
+        # Gui tools such as display the logs and fill the table
         self.tools=gui_tools.utils(self)
+        # state of the program
+        # while it is training you can not change the model parameters
         self.ui_state='idle'
 
         self.ui.tableWidget.setColumnCount(4)
@@ -55,11 +60,15 @@ class AppWindow(QMainWindow):
     def config_update(self):
         self.config.update({'img_H': int(self.ui.in_img_H.text())})
         self.config.update({'img_W': int(self.ui.in_img_W.text())})
-        self.config.update({'set_train': int(self.ui.in_train_dataset.text())})
-        self.config.update({'set_val': int(self.ui.in_val_dataset.text())})
+        self.config.update({'dataset_train_size': int(self.ui.in_train_dataset.text())})
+        self.config.update({'dataset_val_size': int(self.ui.in_val_dataset.text())})
+
+        self.config.update({'model_counter': 0})
         
         self.ui.btn_train.setDisabled(not (hasattr(self,'image_datasets') and hasattr(self,'model')))
         self.ui.btn_plot_imgs.setDisabled(not hasattr(self,'image_datasets'))
+
+
 
 
     

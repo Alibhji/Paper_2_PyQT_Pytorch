@@ -67,8 +67,11 @@ def calc_loss(pred, target, metrics, bce_weight=0.5):
         
     pred = F.sigmoid(pred)
     dice = dice_loss(pred, target)
+
+    # target.size(0) is the batch size
     
     loss = bce * bce_weight + dice * (1 - bce_weight)
+    # print('In the loss ----->>>>>>>>>>', bce.data.cpu().numpy())
     
     metrics['bce'] += bce.data.cpu().numpy() * target.size(0)
     metrics['dice'] += dice.data.cpu().numpy() * target.size(0)
@@ -102,11 +105,13 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
     txt_file_content=''
 
     if(flag_gen_txt):
-        txt_file_content=ui.model_txt_file
+        txt_file_content='[Model_txt_log_path] = '+ui.model_txt_file
     txt_file_content+='\n' + '*' * 30 + '\n'
-    txt_file_content+=ui.modelList[ui.model_name]['name']
+    txt_file_content+='[Model_name] = '+ui.modelList[ui.model_name]['name']
+    txt_file_content += '\n'+'[Model_code] = '+ui.modelList[ui.model_name]['code']
     txt_file_content+='\n' + '*' * 30 + '\n'
 
+    temp_list_bce_dice_total_t, temp_list_bce_dice_total_v = [], [] # (sample_number, loss_value , epoch_number)
 
 
     for epoch in range(num_epochs):
@@ -119,6 +124,11 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
 
         txt_file_content+=('\n'+ 'Epoch {}/{}'.format(epoch, num_epochs - 1))
         txt_file_content+=('\n'+ '-' * 10)
+
+
+        dict_loss={}
+
+
 
 
         since = time.time()
@@ -156,12 +166,38 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
                     if phase == 'train':
                         loss.backward()
                         optimizer.step()
+                        sample_number= epoch_samples+ui.config['dataset_train_size'] * epoch
+                        loss_bce_train= (sample_number,epoch,
+                                         metrics['bce'] / (epoch_samples+inputs.size(0)),
+                                         metrics['dice'] / (epoch_samples + inputs.size(0)),
+                                         metrics['loss'] / (epoch_samples + inputs.size(0)),
+                                         param_group['lr']
+                                         )
+
+                        temp_list_bce_dice_total_t.append(loss_bce_train)
+                    else:
+                        sample_number = epoch_samples + ui.config['dataset_val_size'] * epoch
+
+                        loss_bce_val =  (sample_number,epoch,
+                                         metrics['bce'] / (epoch_samples+inputs.size(0)),
+                                         metrics['dice'] / (epoch_samples + inputs.size(0)),
+                                         metrics['loss'] / (epoch_samples + inputs.size(0)),
+                                         param_group['lr']
+                                         )
+                        temp_list_bce_dice_total_v.append(loss_bce_val)
 
                 # statistics
                 epoch_samples += inputs.size(0)
 
+                # print('metric ---Epoch_sampel--->>>>', metrics, epoch_samples)
+                # print('metric ---Epoch_sampel--->>>>', temp_list_bce_t)
+
+
             print_out=print_metrics(metrics, epoch_samples, phase,ui)
             txt_file_content+=('\n' + "{}: {}".format(phase, ", ".join(print_out)))
+
+
+
 
             epoch_loss = metrics['loss'] / epoch_samples
 
@@ -172,6 +208,8 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
                 bset_epoch= epoch
                 best_model_wts = copy.deepcopy(model.state_dict())
 
+
+
         time_elapsed = time.time() - since
         print('{:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
         ui.tools.logging('{:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
@@ -180,13 +218,23 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
         QtGui.QGuiApplication.processEvents()
     print('Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch))
     ui.tools.logging('Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch),'red')
+    txt_file_content += '\n' + '*' * 30
     txt_file_content+=('\n' + 'Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch))
+
+    dict_loss.update({'loss_bce_train': temp_list_bce_dice_total_t})
+    dict_loss.update({'loss_bce_Val': temp_list_bce_dice_total_v})
+
+    ui.modelList[ui.model_name].update({'loss': dict_loss})
+    print(ui.modelList[ui.model_name]['loss'])
+    txt_file_content+='\n' + '*' * 30
+    txt_file_content+= '\n'+"The loss is in this format [sample number, epoch number , binary_cross_entropy_with_logits , defined_loss , total loss, learning rate]"
+    txt_file_content+='\n' + '[loss] =' + str(ui.modelList[ui.model_name]['loss'])
 
 
 
     if (flag_gen_txt):
         with open(ui.model_txt_file, 'a') as f:
-            f.writelines('\n' + '*' * 30 +'\n'+txt_file_content)
+            f.writelines('\n' + '*' * 30 +'\n'+txt_file_content+'\n' + '*' * 30 +'\n')
 
 
     # load best model weights
@@ -198,8 +246,8 @@ def Dataset_create(ui):
     trans = transforms.Compose([
     transforms.ToTensor(),])
     
-    train_set = SimDataset(ui.config['set_train'], transform = trans, config=ui.config)
-    val_set = SimDataset(ui.config['set_val'], transform = trans, config=ui.config)
+    train_set = SimDataset(ui.config['dataset_train_size'], transform = trans, config=ui.config)
+    val_set = SimDataset(ui.config['dataset_val_size'], transform = trans, config=ui.config)
     ui.tools.logging("Datasets are created.",'red')
     
         
@@ -256,6 +304,9 @@ def training(ui):
 def model_architecture(ui):
     input_ch=list([3])
     out_ch  =list([5,7,9,11,13,15,17])
+
+    ui.config['model_counter']=0
+
     ui.module_dir_name='designed_module'
     root=os.path.join(os.getcwd(),ui.module_dir_name)
     ui.tools.check_dir(ui.module_dir_name,create_dir=True)
@@ -284,11 +335,15 @@ def model_architecture(ui):
         # print(Module_name)
         ui.model_txt_file=os.path.join(root,Module_name+'.txt')
 
+        ui.config['model_counter'] += 1
+        model_code='{:04d}_{:03d}L'.format(ui.config['model_counter'],len(conv))
         model_dic.update({'name':Module_name})
         model_dic.update({'text_log': ui.model_txt_file})
         model_dic.update({'struct':conv})
         model_dic.update({'model': model})
         model_dic.update({'trained': False})
+        model_dic.update({'code': model_code})
+
 
 
 
