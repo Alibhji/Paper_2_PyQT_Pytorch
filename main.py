@@ -42,6 +42,7 @@ class AppWindow(QMainWindow):
         self.modelList ={}
         self.config_update()
         self.tools=gui_tools.utils(self)
+        self.ui_state='idle'
 
         self.ui.tableWidget.setColumnCount(4)
 
@@ -63,9 +64,13 @@ class AppWindow(QMainWindow):
 
     
     def showCell(self,row,col):
-        model_name=self.ui.tableWidget.item(row,col).text()
-        print(row,col,self.ui.tableWidget.item(row,col).text())
-        self.model=self.modelList[model_name]['model']
+        if(self.ui_state=='idle'):
+            model_name=self.ui.tableWidget.item(row,col).text()
+            print(row,col,self.ui.tableWidget.item(row,col).text())
+            self.model=self.modelList[model_name]['model']
+            self.model_name=self.modelList[model_name]['name']
+            self.model_txt_file=self.modelList[model_name]['text_log']
+            print(self.modelList[model_name]['trained'])
 
 
 
@@ -75,6 +80,7 @@ class AppWindow(QMainWindow):
         training(self)
         print(len(self.image_datasets['train']))
         self.config_update()
+        self.tools.fill_out_table(self.modelList)
         # print(self.modelList)
         
         
@@ -93,7 +99,9 @@ class AppWindow(QMainWindow):
  
     def model_archi_btn(self):
         self.modelList={}
-        model_architecture(self)    
+        model_architecture(self)
+        self.tools.fill_out_table(self.modelList)
+        self.config_update()
         
     def plot_btn(self):
         self.tools.plotting(self)

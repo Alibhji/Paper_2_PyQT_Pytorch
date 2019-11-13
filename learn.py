@@ -89,7 +89,8 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(model)
+    ui.modelList[ui.model_name]['trained'] = True
+    # print(model)
 
     # if(ui.tools.check_dir(ui.module_dir_name)):
     # with open(ui.model_txt_file, 'a') as f:
@@ -103,6 +104,9 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
     if(flag_gen_txt):
         txt_file_content=ui.model_txt_file
     txt_file_content+='\n' + '*' * 30 + '\n'
+    txt_file_content+=ui.modelList[ui.model_name]['name']
+    txt_file_content+='\n' + '*' * 30 + '\n'
+
 
 
     for epoch in range(num_epochs):
@@ -177,6 +181,9 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
     print('Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch))
     ui.tools.logging('Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch),'red')
     txt_file_content+=('\n' + 'Best val loss: {:4f} at {} epoch.'.format(best_loss , bset_epoch))
+
+
+
     if (flag_gen_txt):
         with open(ui.model_txt_file, 'a') as f:
             f.writelines('\n' + '*' * 30 +'\n'+txt_file_content)
@@ -220,11 +227,7 @@ def Model_create(ui,architect_file=None):
 
 def training(ui):
     tools=ui.tools
-    
-
-    
     image_datasets=ui.image_datasets
-
     batch_size = 50
 
     dataloaders = {
@@ -244,13 +247,15 @@ def training(ui):
     optimizer_ft = optim.Adam(ui.model.parameters(), lr=1e-4)
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=25, gamma=0.1)
     QtGui.QGuiApplication.processEvents()
+    ui.ui_state='training'
     ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=10,ui=ui)
+    ui.ui_state = 'idle'
 
 
 
 def model_architecture(ui):
     input_ch=list([3])
-    out_ch  =list([5,7,9,11,13,15])
+    out_ch  =list([5,7,9,11,13,15,17])
     ui.module_dir_name='designed_module'
     root=os.path.join(os.getcwd(),ui.module_dir_name)
     ui.tools.check_dir(ui.module_dir_name,create_dir=True)
@@ -283,6 +288,7 @@ def model_architecture(ui):
         model_dic.update({'text_log': ui.model_txt_file})
         model_dic.update({'struct':conv})
         model_dic.update({'model': model})
+        model_dic.update({'trained': False})
 
 
 
@@ -291,7 +297,7 @@ def model_architecture(ui):
         with open(ui.model_txt_file , 'w') as f:
             f.writelines('\n'.join(conv[0:]))
 
-    ui.tools.fill_out_table(ui.modelList)
+
     # print(ui.modelList)
 
 class AliNet(nn.Module):

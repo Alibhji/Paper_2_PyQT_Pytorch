@@ -59,4 +59,9 @@ class utils():
             # for col , data in enumerate(row_data[1].items()):
             #     self.ui.ui.tableWidget.setItem(row,col,QTableWidgetItem(str(data[1])))
             self.ui.ui.tableWidget.setItem(row,0,QTableWidgetItem(str(row_data[1]['name'])))
+            if(row_data[1]['trained']):
+                self.ui.ui.tableWidget.item(row, 0).setForeground(self.green)
+            else:
+                self.ui.ui.tableWidget.item(row, 0).setForeground(self.red)
+
 
