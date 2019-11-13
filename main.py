@@ -6,12 +6,12 @@
 # sudo apt-get install qtcreator pyqt5-dev-tools
 # then uncomment the the following line
 
+
 import compile_ui
 from main_ui import Ui_MainWindow
 import sys ,  os
 
 from PyQt5.QtWidgets import QApplication , QMainWindow
-
 from learn import SimDataset,AliNet, train_model,training ,Dataset_create ,Model_create ,model_architecture
 
 import time
@@ -19,6 +19,7 @@ import copy
 
 from torchsummary import summary
 from my_utils import gui_tools
+from my_utils import joy_plot_
 # from collections import OrderedDict
 
 
@@ -80,6 +81,8 @@ class AppWindow(QMainWindow):
             self.model_name=self.modelList[model_name]['name']
             self.model_txt_file=self.modelList[model_name]['text_log']
             print(self.modelList[model_name]['trained'])
+            # if(self.modelList[model_name]['trained']):
+            #     joy_plot_.plot1(self.modelList[model_name]['loss'])
 
 
 

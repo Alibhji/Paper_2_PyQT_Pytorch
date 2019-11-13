@@ -303,7 +303,7 @@ def training(ui):
 
 def model_architecture(ui):
     input_ch=list([3])
-    out_ch  =list([5,7,9,11,13,15,17])
+    out_ch  =list([5,7,9,11,13,15,17,100])
 
     ui.config['model_counter']=0
 
