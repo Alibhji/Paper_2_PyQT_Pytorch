@@ -93,6 +93,7 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
     best_loss = 1e10
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     ui.modelList[ui.model_name]['trained'] = True
+
     # print(model)
 
     # if(ui.tools.check_dir(ui.module_dir_name)):

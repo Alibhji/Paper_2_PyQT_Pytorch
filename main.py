@@ -81,8 +81,8 @@ class AppWindow(QMainWindow):
             self.model_name=self.modelList[model_name]['name']
             self.model_txt_file=self.modelList[model_name]['text_log']
             print(self.modelList[model_name]['trained'])
-            # if(self.modelList[model_name]['trained']):
-            #     joy_plot_.plot1(self.modelList[model_name]['loss'])
+            if(self.modelList[model_name]['trained']):
+                joy_plot_.plot1(self.modelList[model_name]['loss'])
 
 
 
