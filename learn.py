@@ -1,5 +1,6 @@
 import os
 
+
 import numpy as np
 import helper
 import simulation
@@ -255,8 +256,9 @@ def Dataset_create(ui):
     image_datasets = {
     'train': train_set, 'val': val_set
                                     }
-    
+    # print('Number of classes',image_datasets['train'][0][1].shape)
     ui.image_datasets=image_datasets
+    ui.number_of_classess=image_datasets['train'][0][1].shape[0]
 
 def Model_create(ui,architect_file=None):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -305,6 +307,7 @@ def training(ui):
 def model_architecture(ui):
     input_ch=list([3])
     out_ch  =list([5,7,9,11,13,15,17,100])
+    num_classes=ui.number_of_classess
 
     ui.config['model_counter']=0
 
@@ -321,7 +324,7 @@ def model_architecture(ui):
         conv=[]
         conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(in__,out__,k__,p__))
         conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(out__, out__, k__, p__))
-        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(out__, 6, k__, p__))
+        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(out__, num_classes, k__, p__))
         # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
         # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
         # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))

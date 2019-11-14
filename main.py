@@ -10,7 +10,7 @@
 import compile_ui
 from main_ui import Ui_MainWindow
 import sys ,  os
-
+import pickle
 from PyQt5.QtWidgets import QApplication , QMainWindow
 from learn import SimDataset,AliNet, train_model,training ,Dataset_create ,Model_create ,model_architecture
 
@@ -69,10 +69,6 @@ class AppWindow(QMainWindow):
         self.ui.btn_train.setDisabled(not (hasattr(self,'image_datasets') and hasattr(self,'model')))
         self.ui.btn_plot_imgs.setDisabled(not hasattr(self,'image_datasets'))
 
-
-
-
-    
     def showCell(self,row,col):
         if(self.ui_state=='idle'):
             model_name=self.ui.tableWidget.item(row,col).text()
@@ -120,11 +116,30 @@ class AppWindow(QMainWindow):
         self.tools.logging(str(list(self.image_datasets['train'])[0][0].numpy().shape),'red')
         # self.tools.check_dir('test/123',create_dir=True)
 
+
+    def closeEvent(self, event):
+        # do stuff
+        if True:
+            print('the win is closed')
+            with open('last_saved.uiModel', 'wb') as uiFile:
+                # Step 3
+                pickle.dump(self, uiFile)
+            event.accept() # let the window close
+        else:
+            event.ignore()
+
         
 
 
 
 app=QApplication(sys.argv)
+
+# if(not os.path.exists('last_saved.uiModel')):
+#     win=AppWindow()
+# else :
+#     with open('last_saved.uiModel', 'rb') as loaded_ui:
+#         win = pickle.load(loaded_ui)
+
 win=AppWindow()
 win.show()
 sys.exit(app.exec())
