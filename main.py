@@ -70,6 +70,10 @@ class AppWindow(QMainWindow):
         self.config.update({'dataset_obj_shape_square': bool(self.ui.in_shape_squre.isChecked())})
         self.config.update({'dataset_obj_shape_plus': self.ui.in_shape_plus.isChecked()})
 
+        self.config.update({'train_Epoch_number': int(self.ui.in_train_epoch_num.text())})
+        self.config.update({'dataset_batch_size': int(self.ui.in_batch_size.text())})
+
+
 
         self.config.update({'model_counter': 0})
         

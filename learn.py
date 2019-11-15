@@ -297,9 +297,10 @@ def Model_create(ui,architect_file=None):
     return model.to(device)
 
 def training(ui):
+    num_epochs=ui.config['train_Epoch_number']
     tools=ui.tools
     image_datasets=ui.image_datasets
-    batch_size = 50
+    batch_size = ui.config['dataset_batch_size']
 
     dataloaders = {
         'train': DataLoader(image_datasets['train'], batch_size=batch_size, shuffle=True, num_workers=0),
@@ -319,7 +320,7 @@ def training(ui):
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=25, gamma=0.1)
     QtGui.QGuiApplication.processEvents()
     ui.ui_state='training'
-    ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=10,ui=ui)
+    ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs,ui=ui)
     ui.ui_state = 'idle'
 
 
