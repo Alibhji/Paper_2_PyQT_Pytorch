@@ -5,11 +5,11 @@ import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.gridspec as gridspec
 
-from bokeh.plotting import figure,show
-import chart_studio.plotly as py
-import cufflinks as cf
+# from bokeh.plotting import figure,show
+# import chart_studio.plotly as py
+# import cufflinks as cf
 
-import altair as alt
+# import altair as alt
 
 
 
