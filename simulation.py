@@ -1,8 +1,8 @@
 import numpy as np
 import random
 
-def generate_random_data(height, width, count):
-    x, y = zip(*[generate_img_and_mask(height, width) for i in range(0, count)])
+def generate_random_data(height, width, count,triangle=False,circle=True,mesh=False,square=False,plus=False):
+    x, y = zip(*[generate_img_and_mask(height, width,triangle,circle,mesh,square,plus) for i in range(0, count)])
 
     X = np.asarray(x) * 255
     X = X.repeat(3, axis=1).transpose([0, 2, 3, 1]).astype(np.uint8)

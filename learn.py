@@ -29,9 +29,27 @@ from PyQt5 import  QtGui
 
 class SimDataset(Dataset):
     def __init__(self, count, transform=None , config= None):
+
+        # self.config.update({'dataset_obj_shape_triangle': self.ui.in_shape_triangle.isChecked()})
+        # self.config.update({'dataset_obj_shape_circle': self.ui.in_shape_circle.isChecked()})
+        # self.config.update({'dataset_obj_shape_mesh': self.ui.in_shape_mesh.isChecked()})
+        # self.config.update({'dataset_obj_shape_square': self.ui.in_shape_squre.isChecked()})
+        # self.config.update({'dataset_obj_shape_plus': self.ui.in_shape_plus.isChecked()})
         
-        H_ , W_ = config['img_H'] , config['img_W'] 
-        self.input_images, self.target_masks = simulation.generate_random_data(H_, W_, count=count)        
+        H_ , W_ = config['img_H'] , config['img_W']
+        T_, C_, M_, S_, P_= config['dataset_obj_shape_triangle'] , \
+                            config['dataset_obj_shape_circle'] ,  \
+                            config['dataset_obj_shape_mesh'] , \
+                            config['dataset_obj_shape_square'], \
+                            config['dataset_obj_shape_plus']
+
+        self.input_images, self.target_masks = simulation.generate_random_data(H_, W_,
+                                                                               count=count,
+                                                                               triangle=T_,
+                                                                               circle=C_,
+                                                                               mesh=M_ ,
+                                                                               square=S_,
+                                                                               plus=P_)
         self.transform = transform
     
     def __len__(self):
@@ -247,6 +265,8 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
 def Dataset_create(ui):
     trans = transforms.Compose([
     transforms.ToTensor(),])
+
+
     
     train_set = SimDataset(ui.config['dataset_train_size'], transform = trans, config=ui.config)
     val_set = SimDataset(ui.config['dataset_val_size'], transform = trans, config=ui.config)

@@ -64,6 +64,13 @@ class AppWindow(QMainWindow):
         self.config.update({'dataset_train_size': int(self.ui.in_train_dataset.text())})
         self.config.update({'dataset_val_size': int(self.ui.in_val_dataset.text())})
 
+        self.config.update({'dataset_obj_shape_triangle': self.ui.in_shape_triangle.isChecked()})
+        self.config.update({'dataset_obj_shape_circle': self.ui.in_shape_circle.isChecked()})
+        self.config.update({'dataset_obj_shape_mesh': self.ui.in_shape_mesh.isChecked()})
+        self.config.update({'dataset_obj_shape_square': bool(self.ui.in_shape_squre.isChecked())})
+        self.config.update({'dataset_obj_shape_plus': self.ui.in_shape_plus.isChecked()})
+
+
         self.config.update({'model_counter': 0})
         
         self.ui.btn_train.setDisabled(not (hasattr(self,'image_datasets') and hasattr(self,'model')))

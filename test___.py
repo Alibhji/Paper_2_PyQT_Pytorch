@@ -32,3 +32,8 @@
 # plugins.connect(fig, plugins.LinkedBrush(points))
 #
 # mpld3.show()
+
+import matplotlib.pyplot as plt
+
+fig=plt.figure(10,2)
+fig.show()
