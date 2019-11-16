@@ -326,8 +326,9 @@ def training(ui):
 
 
 def model_architecture(ui):
-    input_ch=list([3])
-    out_ch  =list([5,7,9,11,13,15,17,100])
+    input_ch = list([3])
+    out_ch   = list([pow(2,i) for i in range(10)])
+    kernels  = list(range(3,20,2))
     num_classes=ui.number_of_classess
 
     ui.config['model_counter']=0
@@ -336,46 +337,50 @@ def model_architecture(ui):
     root=os.path.join(os.getcwd(),ui.module_dir_name)
     ui.tools.check_dir(ui.module_dir_name,create_dir=True)
 
-
-    for out__ in out_ch:
-        model_dic = {}
-        in__=input_ch[0]
-        k__=3
-        p__=int(k__/2)
-        conv=[]
-        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(in__,out__,k__,p__))
-        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(out__, out__, k__, p__))
-        conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(out__, num_classes, k__, p__))
-        # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
-        # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
-        # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
-        # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
-
-        model=Model_create(ui,architect_file=conv)
-
-        ui.tools.logging(str(conv))
-        print(str(conv))
-
-        Module_name= 'Module_{}L_{}ich_{}och_{}k_{}p'.format(len(conv),in__,out__,k__,p__)
-        # print(Module_name)
-        ui.model_txt_file=os.path.join(root,Module_name+'.txt')
-
-        ui.config['model_counter'] += 1
-        model_code='{:04d}_{:03d}L'.format(ui.config['model_counter'],len(conv))
-        model_dic.update({'name':Module_name})
-        model_dic.update({'text_log': ui.model_txt_file})
-        model_dic.update({'struct':conv})
-        model_dic.update({'model': model})
-        model_dic.update({'trained': False})
-        model_dic.update({'code': model_code})
+    for k__ in kernels:
+        for out__ in out_ch:
+            model_dic = {}
+            in__=input_ch[0]
+            # k__=17
+            p__=int(k__/2)
+            conv=[]
+            conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(in__,out__,k__,p__))
+            conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(out__, out__, k__, p__))
+            conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format(out__, num_classes, k__, p__))
+            # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
+            # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
+            # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
+            # conv.append('nn.Conv2d( {}, {}, {}, padding={})'.format('6','6',str(ch),str(int(ch/2))))
 
 
 
+            model=Model_create(ui,architect_file=conv)
+            ui.tools.fill_out_table(ui.modelList)
+            QtGui.QGuiApplication.processEvents()
 
-        ui.modelList.update({Module_name : model_dic})
+            ui.tools.logging(str(conv))
+            print(str(conv))
 
-        with open(ui.model_txt_file , 'w') as f:
-            f.writelines('\n'.join(conv[0:]))
+            Module_name= 'Module_{:02d}L_{:02d}ich_{:003d}och_{:02d}k_{:02d}p'.format(len(conv),in__,out__,k__,p__)
+            # print(Module_name)
+            ui.model_txt_file=os.path.join(root,Module_name+'.txt')
+
+            ui.config['model_counter'] += 1
+            model_code='{:04d}_{:03d}L'.format(ui.config['model_counter'],len(conv))
+            model_dic.update({'name':Module_name})
+            model_dic.update({'text_log': ui.model_txt_file})
+            model_dic.update({'struct':conv})
+            model_dic.update({'model': model})
+            model_dic.update({'trained': False})
+            model_dic.update({'code': model_code})
+
+
+
+
+            ui.modelList.update({Module_name : model_dic})
+
+            with open(ui.model_txt_file , 'w') as f:
+                f.writelines('\n'.join(conv[0:]))
 
 
     # print(ui.modelList)

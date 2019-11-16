@@ -55,7 +55,7 @@ class utils():
         # print(dict_data)
 
         self.ui.ui.tableWidget.setRowCount(len(dict_data))
-        for row, row_data in enumerate(dict_data.items()):
+        for row, row_data in enumerate(sorted(dict_data.items())):
             # for col , data in enumerate(row_data[1].items()):
             #     self.ui.ui.tableWidget.setItem(row,col,QTableWidgetItem(str(data[1])))
             self.ui.ui.tableWidget.setItem(row,0,QTableWidgetItem(str(row_data[1]['name'])))

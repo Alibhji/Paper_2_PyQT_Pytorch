@@ -20,7 +20,7 @@ import copy
 from torchsummary import summary
 from my_utils import gui_tools
 from my_utils import joy_plot_
-# from collections import OrderedDict
+from collections import OrderedDict
 
 
 class AppWindow(QMainWindow):
@@ -40,7 +40,7 @@ class AppWindow(QMainWindow):
         self.ui.tableWidget.cellClicked.connect(self.showCell)
 
         # this is a place holder for the data set cofiguration --> img_H, img_W, num of train and val set ...
-        self.modelList = {}
+        self.modelList =OrderedDict()
         # it holds the generated model by the program
         self.config={}
         self.config_update()
@@ -56,7 +56,7 @@ class AppWindow(QMainWindow):
         self.ui.tableWidget.setColumnWidth(2, 250)
         self.ui.tableWidget.setColumnWidth(3, 250)
         self.ui.tableWidget.setRowCount(1)
-        self.ui.tableWidget.setColumnWidth(0, 250)
+        self.ui.tableWidget.setColumnWidth(0, 300)
     
     def config_update(self):
         self.config.update({'img_H': int(self.ui.in_img_H.text())})
@@ -112,12 +112,15 @@ class AppWindow(QMainWindow):
 
     def model_generation(self):
         self.config_update()
+        self.ui_state = 'model_generation'
         Model_create(self)
+        self.ui_state = 'idle'
         self.config_update()
         
  
     def model_archi_btn(self):
         self.modelList={}
+        # self.modelList =
         model_architecture(self)
         self.tools.fill_out_table(self.modelList)
         self.config_update()
@@ -129,15 +132,16 @@ class AppWindow(QMainWindow):
 
 
     def closeEvent(self, event):
+        pass
         # do stuff
-        if True:
-            print('the win is closed')
-            with open('last_saved.uiModel', 'wb') as uiFile:
-                # Step 3
-                pickle.dump(self, uiFile)
-            event.accept() # let the window close
-        else:
-            event.ignore()
+        # if True:
+        #     print('the win is closed')
+        #     with open('last_saved.uiModel', 'wb') as uiFile:
+        #         # Step 3
+        #         pickle.dump(self, uiFile)
+        #     event.accept() # let the window close
+        # else:
+        #     event.ignore()
 
         
 
