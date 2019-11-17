@@ -107,9 +107,13 @@ def add_plus(arr, x, y, size):
     return arr
 
 def get_random_location(width, height, zoom=1.0):
+
+
     x = int(width * random.uniform(0.1, 0.9))
     y = int(height * random.uniform(0.1, 0.9))
 
+
     size = int(min(width, height) * random.uniform(0.06, 0.12) * zoom)
+
 
     return (x, y, size)

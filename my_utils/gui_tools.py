@@ -65,6 +65,32 @@ class utils():
             else:
                 self.ui.ui.tableWidget.item(row, 0).setForeground(self.red)
 
+    def fill_out_table_2(self, dict_data):
+        lenK = len(self.ui.config['models_outputs'])
+        lenO = len(self.ui.config['models_kernels'])
+        # print(dict_data)
+
+        self.ui.ui.tableWidget_2.setRowCount   (lenK)
+        self.ui.ui.tableWidget_2.setColumnCount(lenO)
+
+        self.ui.ui.tableWidget_2.setHorizontalHeaderLabels(['k='+str(i) for i in self.ui.config['models_kernels']])
+        self.ui.ui.tableWidget_2.setVerticalHeaderLabels  ([str(i) for i in self.ui.config['models_outputs']])
+        # self.ui.ui.tableWidget_2.setHorizontalHeaderLabels(['1','2','3'])
+
+
+        for row, row_data in enumerate(sorted(dict_data.items())):
+            # for col , data in enumerate(row_data[1].items()):
+            #     self.ui.ui.tableWidget.setItem(row,col,QTableWidgetItem(str(data[1])))
+            rr = int (row /lenO)
+            cc = row % lenO
+            self.ui.ui.tableWidget_2.setItem(rr, cc, QTableWidgetItem(str(row_data[1]['code']).split('_')[0]))
+
+
+            if (row_data[1]['trained']):
+                self.ui.ui.tableWidget_2.item(rr, cc).setForeground(self.green)
+            else:
+                self.ui.ui.tableWidget_2.item(rr, cc).setForeground(self.red)
+
 
     def save_object(self, path , object):
 
