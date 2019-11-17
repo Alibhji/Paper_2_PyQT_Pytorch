@@ -21,6 +21,7 @@ from collections import defaultdict
 from loss import dice_loss
 
 from PyQt5 import  QtGui
+import pickle
 
 
 
@@ -245,7 +246,7 @@ def train_model(model, dataloaders,optimizer, scheduler, num_epochs=25, ui=None)
     dict_loss.update({'loss_bce_Val': temp_list_bce_dice_total_v})
 
     ui.modelList[ui.model_name].update({'loss': dict_loss})
-    print(ui.modelList[ui.model_name]['loss'])
+    # print(ui.modelList[/ui.model_name]['loss'])
     txt_file_content+='\n' + '*' * 30
     txt_file_content+= '\n'+"The loss is in this format [sample number, epoch number , binary_cross_entropy_with_logits , defined_loss , total loss, learning rate]"
     txt_file_content+='\n' + '[loss] =' + str(ui.modelList[ui.model_name]['loss'])
@@ -281,22 +282,45 @@ def Dataset_create(ui):
     ui.number_of_classess=image_datasets['train'][0][1].shape[0]
 
 def Model_create(ui,architect_file=None):
+
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     if(architect_file):
         model=AliNet(architect_file=architect_file)
 
     else:
         model=AliNet()
-    model=model.to(device)
+
 
     # summary(ui.model,input_size=(3,25,25),tools=ui.tools)
+    model = model.to(device)
     summary(model, input_size=(3, 25, 25))
     ui.tools.logging("The model is created.",'red')
+
     # hl.build_graph(ui.model, torch.zeros([1, 3, 25, 25]).to(device))
-    ui.model = model.to(device)
-    return model.to(device)
+
+
+    root=os.path.join(os.getcwd(),ui.module_dir_name,'models')
+    ui.tools.check_dir(root,create_dir=True)
+    # print('ui.modelListname------->',ui.modelList[ui.Module_name]['code'])
+
+    print('\n'*3)
+    model_name=os.path.join(root,ui.modelList[ui.Module_name]['code']+'.'+ui.modelList[ui.Module_name]['name']+'.model')
+
+
+    ui.tools.save_object(path=model_name , object=model)
+    ui.modelList[ui.Module_name].update({'model_address': model_name})
+    # with open(model_name, 'wb') as uiFile:
+    #     # Step 3
+    #     pickle.dump(model, uiFile)
+
+    torch.cuda.empty_cache()
+    del model
+
 
 def training(ui):
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    ui.model.to(device)
     num_epochs=ui.config['train_Epoch_number']
     tools=ui.tools
     image_datasets=ui.image_datasets
@@ -320,7 +344,8 @@ def training(ui):
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=25, gamma=0.1)
     QtGui.QGuiApplication.processEvents()
     ui.ui_state='training'
-    ui.model = train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs,ui=ui)
+
+    train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs,ui=ui)
     ui.ui_state = 'idle'
 
 
@@ -354,7 +379,7 @@ def model_architecture(ui):
 
 
 
-            model=Model_create(ui,architect_file=conv)
+
             ui.tools.fill_out_table(ui.modelList)
             QtGui.QGuiApplication.processEvents()
 
@@ -364,20 +389,20 @@ def model_architecture(ui):
             Module_name= 'Module_{:02d}L_{:02d}ich_{:003d}och_{:02d}k_{:02d}p'.format(len(conv),in__,out__,k__,p__)
             # print(Module_name)
             ui.model_txt_file=os.path.join(root,Module_name+'.txt')
+            ui.Module_name=Module_name
 
             ui.config['model_counter'] += 1
             model_code='{:04d}_{:03d}L'.format(ui.config['model_counter'],len(conv))
             model_dic.update({'name':Module_name})
             model_dic.update({'text_log': ui.model_txt_file})
             model_dic.update({'struct':conv})
-            model_dic.update({'model': model})
+
             model_dic.update({'trained': False})
             model_dic.update({'code': model_code})
-
-
-
-
             ui.modelList.update({Module_name : model_dic})
+
+            Model_create(ui, architect_file=conv)
+            # model_dic.update({'model': model})
 
             with open(ui.model_txt_file , 'w') as f:
                 f.writelines('\n'.join(conv[0:]))

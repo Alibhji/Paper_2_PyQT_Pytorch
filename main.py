@@ -80,14 +80,19 @@ class AppWindow(QMainWindow):
         self.ui.btn_train.setDisabled(not (hasattr(self,'image_datasets') and hasattr(self,'model')))
         self.ui.btn_plot_imgs.setDisabled(not hasattr(self,'image_datasets'))
 
+    #It generates event when you click on the tabel cells and give you row and column number
     def showCell(self,row,col):
         if(self.ui_state=='idle'):
             model_name=self.ui.tableWidget.item(row,col).text()
             print(row,col,self.ui.tableWidget.item(row,col).text())
-            self.model=self.modelList[model_name]['model']
+            # self.model=self.modelList[model_name]['model']
+            selected_name=self.ui.tableWidget.item(row,0).text()
+            self.model=self.tools.load_object(self.modelList[selected_name]['model_address'])
             self.model_name=self.modelList[model_name]['name']
             self.model_txt_file=self.modelList[model_name]['text_log']
             print(self.modelList[model_name]['trained'])
+            print("**--**" * 30)
+            print(self.model)
             if(self.modelList[model_name]['trained']):
                 joy_plot_.plot1(self.modelList[model_name]['loss'])
 
@@ -116,7 +121,7 @@ class AppWindow(QMainWindow):
         Model_create(self)
         self.ui_state = 'idle'
         self.config_update()
-        
+
  
     def model_archi_btn(self):
         self.modelList={}

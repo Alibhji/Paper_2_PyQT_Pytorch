@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import  QTableWidgetItem
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import  pickle
 
 
 
@@ -65,3 +66,16 @@ class utils():
                 self.ui.ui.tableWidget.item(row, 0).setForeground(self.red)
 
 
+    def save_object(self, path , object):
+
+        with open(path, 'wb') as uiFile:
+            # Step 3
+            pickle.dump(object, uiFile)
+
+
+    def load_object(self, path ):
+
+        with open(path, 'rb') as uiFile:
+            # Step 3
+            object = pickle.load(uiFile)
+            return object
