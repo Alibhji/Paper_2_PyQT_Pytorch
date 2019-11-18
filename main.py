@@ -84,6 +84,21 @@ class AppWindow(QMainWindow):
                 break
             self.train()
 
+        print((self.modelList))
+        loss_file=os.path.join(os.getcwd(),self.module_dir_name,'All_Results.losses')
+
+        params={'models_inputs':self.config['models_inputs'],
+                'models_outputs':self.config['models_outputs'],
+                'models_kernels':self.config['models_kernels'],
+                'models_num_classes':self.config['models_num_classes']}
+        self.modelList.update({'params' : params})
+
+        self.tools.save_object(path=loss_file,object=self.modelList)
+        # print(self.modelList)
+        self.tools.plot_3d_(loss_file)
+        del (self.modelList)
+        
+        # print((self.modelList))
             # print('----')
 
 
@@ -112,6 +127,7 @@ class AppWindow(QMainWindow):
         self.ui.btn_plot_imgs.setDisabled(not hasattr(self,'image_datasets'))
 
         self.ui.in_models_layers.setEnabled(False)
+        self.module_dir_name = self.ui.in_model_save_dir.text()
 
     #It generates event when you click on the tabel cells and give you row and column number
     def showCell(self,row,col):

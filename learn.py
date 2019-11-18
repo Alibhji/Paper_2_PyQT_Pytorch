@@ -365,6 +365,8 @@ def model_architecture(ui):
     out_ch   = eval(s3)
 
 
+
+
     print('O..'*20,kernels)
     num_classes = ui.number_of_classess
 
@@ -378,7 +380,7 @@ def model_architecture(ui):
     ui.config['model_counter']=0
 
     # ui.module_dir_name='designed_module'
-    ui.module_dir_name=ui.ui.in_model_save_dir.text()
+
     root=os.path.join(os.getcwd(),ui.module_dir_name)
     ui.tools.check_dir(ui.module_dir_name,create_dir=True)
 

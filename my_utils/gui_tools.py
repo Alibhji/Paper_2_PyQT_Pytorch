@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import  QTableWidgetItem
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import  pickle
+import numpy as np
 
 
 
@@ -105,3 +106,94 @@ class utils():
             # Step 3
             object = pickle.load(uiFile)
             return object
+
+from mpl_toolkits import  mplot3d
+def plot_3d_( path):
+
+    font = {'family': 'serif',
+            'color': 'darkred',
+            'weight': 'normal',
+            'size': 16,
+            }
+
+    def load(p):
+        with open(p, 'rb') as uiFile:
+            # Step 3
+            object = pickle.load(uiFile)
+            return object
+
+    data=load(path)
+
+    modules = [i for i in list(data.keys()) if i.startswith('Module')]
+
+    k=data['params']['models_kernels']
+    ch = data['params']['models_outputs']
+
+
+
+    Z=np.random.rand(len(ch),len(k))
+    # Z = np.zeros((len(ch), len(k)))
+    Z1, Z2, Z3, Z4 , names =[] ,[], [], [] ,[]
+    indx=0
+    for i in k:
+        for j in [ch[0]]:
+            Module_name = 'Module_{:02d}L_{:02d}ich_{:003d}och_{:02d}k_{:02d}p'.format(3,
+                                                                                       3,
+                                                                                       j,
+                                                                                       i,
+                                                                                       int(i / 2))
+            l = data[Module_name]['loss']['loss_bce_train']
+            samples = [kk[0] for kk in l]
+            # epoche = [k[1] for k in l]
+            loss1  = [kk[2] for kk in l]
+            loss2  = [kk[3] for kk in l]
+            loss3  = [kk[4] for kk in l]
+            lr     = [kk[5] for kk in l]
+
+
+            # print('sample', sample)
+            # print('loss1', loss1)
+            # print('loss2', loss2)
+            # print('loss3', loss3)
+            # print('lr', loss3)
+
+            Z1.append(loss1)
+            Z2.append(loss3)
+            Z3.append(loss3)
+            Z4.append(lr)
+            names.append('{}_{:003d}ch_{:02d}k'.format(indx, j,i))
+            indx+=1
+
+
+    print('shape:',np.array(Z1).shape)
+
+
+    # X, Y = np.meshgrid(list(range(np.array(Z1).shape[1])), list(range(np.array(Z1).shape[0])))
+    X, Y = np.meshgrid(samples, list(range(np.array(Z1).shape[0])))
+
+    print('samples:', X,Y)
+    ind_x=list(range(np.array(Z1).shape[1]))
+
+
+    Z = np.array(Z1)[Y, ind_x]
+
+    ax = plt.axes(projection='3d')
+    ax.contour3D(Y, X, Z, 50, cmap='Blues')
+    ax.view_init(60, 45)
+    plt.title('loss changing b', fontdict=font)
+    # plt.text(2, 0.65, r'$\cos(2 \pi t) \exp(-t)$', fontdict=font)
+    plt.xlabel('Module_Name', fontdict=font)
+    # plt.yticks(list(range(np.array(Z1).shape[1])), str(samples).replace('[','' ).replace(']','').split(','))
+    plt.xticks(list(range(np.array(Z1).shape[0])), str(names).replace('[','' ).replace(']','').split(','))
+    print(samples)
+    plt.ylabel('Sample numbers', fontdict=font)
+    # ax.scatter3D(Y, X, Z, cmap='Greens')
+    plt.style.use('classic')
+    ax.plot_wireframe(Y, X, Z, color='black')
+    plt.show()
+
+
+
+if __name__ == '__main__':
+
+    plot_3d_('C:\\Users\\alibh\\Desktop\\My_Qt\\Paper_2_PyQT_Pytorch\\designed_modules\\All_Results.losses')
