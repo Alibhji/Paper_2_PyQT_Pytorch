@@ -188,7 +188,7 @@ class utils():
         Z = np.array(Z1)[Y, ind_x]
 
         ax = plt.axes(projection='3d')
-        ax.contour3D(Y, X, Z, 50, cmap='Blues')
+
         ax.view_init(60, 45)
         plt.title('loss changing b', fontdict=font)
         # plt.text(2, 0.65, r'$\cos(2 \pi t) \exp(-t)$', fontdict=font)
@@ -199,7 +199,10 @@ class utils():
         plt.ylabel('Sample numbers', fontdict=font)
         # ax.scatter3D(Y, X, Z, cmap='Greens')
         plt.style.use('classic')
-        ax.plot_wireframe(Y, X, Z, color='black')
+        # ax.plot_wireframe(Y, X, Z, color='black')
+        # ax.contour3D(Y, X, Z, 50, cmap='Blues')
+        ax.plot_surface(Y, X, Z, rstride=1, cstride=1000, color='w', shade=False, lw=.5)
+
         plt.show()
 
 
