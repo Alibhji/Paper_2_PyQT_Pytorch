@@ -351,9 +351,21 @@ def training(ui):
 
 
 def model_architecture(ui):
-    input_ch = list([3])
-    out_ch   = list([pow(2,i) for i in range(6)])
-    kernels  = list(range(3,20,2))
+    # input_ch = list([3])
+    # out_ch   = list([pow(2,i) for i in range(2)])
+    # kernels  = list(range(3,8,2))
+
+
+    s1 = ui.ui.in_models_layers.text()
+    s2 = ui.ui.in_models_kernels.text()
+    s3 = ui.ui.in_models_channels.text()
+
+    input_ch = eval(s1)
+    kernels  = eval(s2)
+    out_ch   = eval(s3)
+
+
+    print('O..'*20,kernels)
     num_classes = ui.number_of_classess
 
     ui.config.update({'models_inputs' :input_ch})
@@ -365,7 +377,8 @@ def model_architecture(ui):
 
     ui.config['model_counter']=0
 
-    ui.module_dir_name='designed_module'
+    # ui.module_dir_name='designed_module'
+    ui.module_dir_name=ui.ui.in_model_save_dir.text()
     root=os.path.join(os.getcwd(),ui.module_dir_name)
     ui.tools.check_dir(ui.module_dir_name,create_dir=True)
 

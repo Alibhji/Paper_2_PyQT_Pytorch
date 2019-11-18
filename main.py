@@ -68,6 +68,7 @@ class AppWindow(QMainWindow):
 
 
     def btn_train_all_models(self):
+
         for model in self.modelList.items():
             print(model[0])
 
@@ -78,7 +79,11 @@ class AppWindow(QMainWindow):
 
             print("**--**" * 30)
             print(self.model)
+
+            if (self.ui.chkbox_stop_training.isChecked()):
+                break
             self.train()
+
             # print('----')
 
 
@@ -105,6 +110,8 @@ class AppWindow(QMainWindow):
         
         self.ui.btn_train.setDisabled(not (hasattr(self,'image_datasets') and hasattr(self,'model')))
         self.ui.btn_plot_imgs.setDisabled(not hasattr(self,'image_datasets'))
+
+        self.ui.in_models_layers.setEnabled(False)
 
     #It generates event when you click on the tabel cells and give you row and column number
     def showCell(self,row,col):
@@ -136,6 +143,10 @@ class AppWindow(QMainWindow):
         self.tools.fill_out_table(self.modelList)
         self.tools.fill_out_table_2(self.modelList)
 
+
+
+
+
         # print(self.modelList)
         
         
@@ -160,8 +171,10 @@ class AppWindow(QMainWindow):
         # self.modelList =
         model_architecture(self)
         self.tools.fill_out_table(self.modelList)
-        self.config_update()
         self.tools.fill_out_table_2(self.modelList)
+
+        self.config_update()
+
         # self.ui.tableWidget_2.setColumnCount(len(self.config['models_kernels']))
         # self.ui.tableWidget_2.setRowCount   (len(self.config['models_outputs']))
         # print(len(self.config['models_kernels']))
