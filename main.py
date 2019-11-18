@@ -38,6 +38,12 @@ class AppWindow(QMainWindow):
         self.ui.btn_model_arch.clicked.connect(self.model_archi_btn)
         self.ui.btn_plot_imgs.clicked.connect(self.plot_btn)
         self.ui.tableWidget.cellClicked.connect(self.showCell)
+        self.ui.btn_3d_plot.clicked.connect(self.btn_plot_3d)
+
+        # self.ui.in_cmbox_3dPlot.setItemText(0,'tesrt')
+        # self.ui.in_cmbox_3dPlot.currentText()
+
+
 
         # self.ui.bt
         # self.ui.tra
@@ -65,6 +71,14 @@ class AppWindow(QMainWindow):
         # self.ui.tableWidget.setColumnWidth(3, 250)
         # self.ui.tableWidget.setRowCount(1)
         self.ui.tableWidget.setColumnWidth(0, 300)
+
+
+    def btn_plot_3d(self) :
+
+        loss_file = os.path.join(os.getcwd(), self.module_dir_name, 'All_Results.losses')
+        self.tools.plot_3d_(loss_file)
+
+
 
 
     def btn_train_all_models(self):
@@ -95,7 +109,7 @@ class AppWindow(QMainWindow):
 
         self.tools.save_object(path=loss_file,object=self.modelList)
         # print(self.modelList)
-        self.tools.plot_3d_(loss_file)
+        # self.tools.plot_3d_(loss_file)
         del (self.modelList)
         
         # print((self.modelList))

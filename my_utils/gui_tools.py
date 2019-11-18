@@ -107,36 +107,46 @@ class utils():
             object = pickle.load(uiFile)
             return object
 
-from mpl_toolkits import  mplot3d
-def plot_3d_( path):
+    from mpl_toolkits import  mplot3d
+    def plot_3d_(self, path):
 
-    font = {'family': 'serif',
-            'color': 'darkred',
-            'weight': 'normal',
-            'size': 16,
-            }
+        font = {'family': 'serif',
+                'color': 'darkred',
+                'weight': 'normal',
+                'size': 16,
+                }
 
-    def load(p):
-        with open(p, 'rb') as uiFile:
-            # Step 3
-            object = pickle.load(uiFile)
-            return object
+        def load(p):
+            with open(p, 'rb') as uiFile:
+                # Step 3
+                object = pickle.load(uiFile)
+                return object
 
-    data=load(path)
+        data=load(path)
 
-    modules = [i for i in list(data.keys()) if i.startswith('Module')]
+        modules = [i for i in list(data.keys()) if i.startswith('Module')]
 
-    k=data['params']['models_kernels']
-    ch = data['params']['models_outputs']
+        k=data['params']['models_kernels']
+        ch = data['params']['models_outputs']
+
+        choose = self.ui.ui.in_cmbox_3dPlot.currentText()
+
+        self.ui.ui.in_cmbox_3dPlot.clear()
+        for item in ch:
+            self.ui.ui.in_cmbox_3dPlot.addItem(str(item))
+
+
+        print('combo box:',int(choose))
 
 
 
-    Z=np.random.rand(len(ch),len(k))
-    # Z = np.zeros((len(ch), len(k)))
-    Z1, Z2, Z3, Z4 , names =[] ,[], [], [] ,[]
-    indx=0
-    for i in k:
-        for j in [ch[0]]:
+        Z=np.random.rand(len(ch),len(k))
+        # Z = np.zeros((len(ch), len(k)))
+        Z1, Z2, Z3, Z4 , names =[] ,[], [], [] ,[]
+        indx=0
+        for i in k:
+            # for j in [ch[0]]:
+            j = int(choose)
             Module_name = 'Module_{:02d}L_{:02d}ich_{:003d}och_{:02d}k_{:02d}p'.format(3,
                                                                                        3,
                                                                                        j,
@@ -165,32 +175,32 @@ def plot_3d_( path):
             indx+=1
 
 
-    print('shape:',np.array(Z1).shape)
+        print('shape:',np.array(Z1).shape)
 
 
-    # X, Y = np.meshgrid(list(range(np.array(Z1).shape[1])), list(range(np.array(Z1).shape[0])))
-    X, Y = np.meshgrid(samples, list(range(np.array(Z1).shape[0])))
+        # X, Y = np.meshgrid(list(range(np.array(Z1).shape[1])), list(range(np.array(Z1).shape[0])))
+        X, Y = np.meshgrid(samples, list(range(np.array(Z1).shape[0])))
 
-    print('samples:', X,Y)
-    ind_x=list(range(np.array(Z1).shape[1]))
+        print('samples:', X,Y)
+        ind_x=list(range(np.array(Z1).shape[1]))
 
 
-    Z = np.array(Z1)[Y, ind_x]
+        Z = np.array(Z1)[Y, ind_x]
 
-    ax = plt.axes(projection='3d')
-    ax.contour3D(Y, X, Z, 50, cmap='Blues')
-    ax.view_init(60, 45)
-    plt.title('loss changing b', fontdict=font)
-    # plt.text(2, 0.65, r'$\cos(2 \pi t) \exp(-t)$', fontdict=font)
-    plt.xlabel('Module_Name', fontdict=font)
-    # plt.yticks(list(range(np.array(Z1).shape[1])), str(samples).replace('[','' ).replace(']','').split(','))
-    plt.xticks(list(range(np.array(Z1).shape[0])), str(names).replace('[','' ).replace(']','').split(','))
-    print(samples)
-    plt.ylabel('Sample numbers', fontdict=font)
-    # ax.scatter3D(Y, X, Z, cmap='Greens')
-    plt.style.use('classic')
-    ax.plot_wireframe(Y, X, Z, color='black')
-    plt.show()
+        ax = plt.axes(projection='3d')
+        ax.contour3D(Y, X, Z, 50, cmap='Blues')
+        ax.view_init(60, 45)
+        plt.title('loss changing b', fontdict=font)
+        # plt.text(2, 0.65, r'$\cos(2 \pi t) \exp(-t)$', fontdict=font)
+        plt.xlabel('Module_Name', fontdict=font)
+        # plt.yticks(list(range(np.array(Z1).shape[1])), str(samples).replace('[','' ).replace(']','').split(','))
+        plt.xticks(list(range(np.array(Z1).shape[0])), str(names).replace('[','' ).replace(']','').split(','))
+        print(samples)
+        plt.ylabel('Sample numbers', fontdict=font)
+        # ax.scatter3D(Y, X, Z, cmap='Greens')
+        plt.style.use('classic')
+        ax.plot_wireframe(Y, X, Z, color='black')
+        plt.show()
 
 
 
