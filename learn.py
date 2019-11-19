@@ -345,7 +345,7 @@ def training(ui):
     QtGui.QGuiApplication.processEvents()
     ui.ui_state='training'
 
-    train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs,ui=ui)
+    ui.model=train_model(ui.model,dataloaders, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs,ui=ui)
     ui.ui_state = 'idle'
 
 

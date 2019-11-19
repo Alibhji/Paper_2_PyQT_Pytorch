@@ -97,6 +97,7 @@ class AppWindow(QMainWindow):
             if (self.ui.chkbox_stop_training.isChecked()):
                 break
             self.train()
+            self.model = self.tools.save_object(object=self.model,path=self.model_txt_file)
 
         print((self.modelList))
         loss_file=os.path.join(os.getcwd(),self.module_dir_name,'All_Results.losses')
