@@ -10,7 +10,11 @@ import pickle
 # import pyjoyplot as pjp
 import joypy
 import pandas as pd
-from matplotlib import pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.collections import PolyCollection
+from matplotlib.colors import colorConverter
+import matplotlib.pyplot as plt
 
 
 
@@ -26,6 +30,7 @@ class App(QMainWindow):
 
     def confin_ui(self):
         self.ui.btn_open.clicked.connect(self.btn_open)
+        self.ui.btn_Plot_all.clicked.connect(self.plot_all)
         self.ui.listWidget.itemDoubleClicked.connect(self.double_tabel)
         self.ui.listWidget.clear()
         self.data={}
@@ -86,6 +91,106 @@ class App(QMainWindow):
         for name_ in modules:
             self.ui.listWidget.addItem(name_)
         print(self.params )
+
+
+
+
+    def plot_all(self):
+
+        zs = list(range(self.ui.listWidget.count()))
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+
+        cc = lambda arg: colorConverter.to_rgba(arg, alpha=0.6)
+
+
+        verts = []
+        names=[]
+
+        for i in zs:
+            item = self.ui.listWidget.item(i)
+            Module_name = item.text()
+            names.append(Module_name)
+        filter=self.ui.in_filter.text()
+        if not filter:
+            filter='03'
+        names=[i for i in names if (i.find(filter)>0)]
+
+        print(names)
+
+        for i in names:
+            l = self.data[i]['loss']['loss_bce_train']
+
+            samples = [kk[0] for kk in l]
+            epoche  = [kk[1] for kk in l]
+            loss1   = [kk[2] for kk in l]
+            loss2   = [kk[3] for kk in l]
+            loss3   = [kk[4] for kk in l]
+            lr = [kk[5] for kk in l]
+
+            xs = samples
+
+            ys = loss1
+            ys[0], ys[-1] = 0, 0
+            verts.append(list(zip(xs, ys)))
+
+        colours = plt.cm.Blues(np.linspace(0.2, 0.8, len(names)))
+        poly = PolyCollection(verts, facecolors=colours,edgecolor="k", linewidth=2)
+        # poly = PolyCollection(verts, facecolors=[cc('g')])
+
+        poly.set_alpha(0.7)
+        # zs=[eval('{}.0'.format(i)) for i in zs]
+
+        zs = np.arange(0, len(names), 1.0)
+
+        ax.add_collection3d(poly, zs=zs, zdir='y')
+
+
+
+        ax.set_xlabel('X')
+        ax.set_xlim3d(0, samples[-1])
+        ax.set_ylabel('Y')
+        ax.set_ylim3d(-1, zs[-1])
+        ax.set_zlabel('Z')
+        ax.set_zlim3d(0, 1)
+
+        plt.show()
+        # fig = plt.figure()
+        # ax = fig.gca(projection='3d')
+        # zs = [0.0, 1.0, 2.0, 3.0]
+        #
+        # for i in range(self.ui.listWidget.count()):
+        #     item=self.ui.listWidget.item(i)
+        #     print(item.text())
+        #     Module_name=item.text()
+        #
+        #     l = self.data[Module_name]['loss']['loss_bce_train']
+        #     # print(l)
+        #     samples = [kk[0] for kk in l]
+        #     epoche  = [kk[1] for kk in l]
+        #     loss1   = [kk[2] for kk in l]
+        #     loss2   = [kk[3] for kk in l]
+        #     loss3   = [kk[4] for kk in l]
+        #     lr = [kk[5] for kk in l]
+        #
+        #
+        #
+        #     xs = samples
+        #     verts = []
+        #
+        #
+        #     ys = loss1
+        #     # ys[0], ys[-1] = 0, 0
+        #     verts.append(list(zip(xs, ys)))
+        #
+        # cc = lambda arg: colorConverter.to_rgba(arg, alpha=0.6)
+        #
+        # poly = PolyCollection(verts, facecolors=[cc('r'), cc('g'), cc('b'),
+        #                                          cc('y')])
+        # poly.set_alpha(0.7)
+        # ax.add_collection3d(poly, zs=zs, zdir='y')
+
+
 
 
 
