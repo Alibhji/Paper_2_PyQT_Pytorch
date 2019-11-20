@@ -162,6 +162,11 @@ class PandasModel(QtCore.QAbstractTableModel):
 
 
 
+def calculate_area(row):
+    cc=row['yx_max'] - row['yx_min']
+
+    return cc
+
 
 
 
