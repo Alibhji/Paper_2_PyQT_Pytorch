@@ -99,7 +99,7 @@ def Read_VOC(cfg):
         assert len(yx_min.shape) == 2 and yx_min.shape[-1] == 2
         data.append(dict(path=path, yx_min=yx_min, yx_max=yx_max, cls=cls, difficult=difficult))
     logging.info('%d of %d images are saved' % (len(data), len(filenames)))
-    return data
+    return data ,category_index
 
 class PandasModel(QtCore.QAbstractTableModel):
     def __init__(self, df = pd.DataFrame(), parent=None):
