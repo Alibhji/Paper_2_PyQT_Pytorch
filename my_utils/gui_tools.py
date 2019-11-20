@@ -33,6 +33,7 @@ class utils():
             self.ui.ui.textBrowser.append(message)
             self.ui.ui.textBrowser.setTextColor(self.black)
 
+
     def plotting(self,ui):
         fig = plt.figure(figsize=(9, 15))
         gs = gridspec.GridSpec(nrows=4, ncols=4)
