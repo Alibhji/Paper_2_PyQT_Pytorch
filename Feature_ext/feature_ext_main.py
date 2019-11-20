@@ -50,6 +50,9 @@ class Appwindow(QMainWindow):
         col_name = list(data_pd.columns)
         data_pd['area'] = data_pd.apply(
             lambda x: ((x[col_name[3]] - x[col_name[4]])[:, 1] * (x[col_name[3]] - x[col_name[4]])[:, 0]), axis=1)
+
+        data_pd['center_point'] = data_pd.apply(
+            lambda x: ((x[col_name[4]])+(x[col_name[3]]))/2.0, axis=1)
         # data_pd['area'] = data_pd.apply(util.calculate_area, axis=1)
         # print(data_pd[''])
 
@@ -85,6 +88,13 @@ class Appwindow(QMainWindow):
         xyMin = [int(float(i)) for i in xyMin ]
         xyMin = [tuple(xyMin[i + 0:2 + i]) for i in range(0, len(xyMin), 2)]
 
+        ind = self.model.index(row, 7)
+        center = list(self.model.itemData(QModelIndex(ind)).values())[0]
+        center = center.replace('[', '').replace(']', '').split()
+        center = [int(float(i)) for i in center ]
+        center = [tuple(center[i + 0:2 + i]) for i in range(0, len(center), 2)]
+        print(center)
+
         classes=self.cfg['category'].split(',')
         ind = self.model.index(row, 0)
         label = list(self.model.itemData(QModelIndex(ind)).values())[0]
@@ -114,6 +124,7 @@ class Appwindow(QMainWindow):
             objs.append("{}-{}".format(i+1,classes[int(label[i])]))
             cv2.putText(image, '{}-{}({})'.format(i+1,classes[int(label[i])],label[i]), (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 255),1)
             image = cv2.rectangle(image, start_point, end_point, color, thickness)
+            image=cv2.circle(image, (center[i][1],center[i][0]), 2, (0, 0, 255), -1)
 
         util.Qlogging(self.ui.textBrowser, '{} has {} objects: \\n {}'.format(name,len(xyMax),objs),'red' )
 
