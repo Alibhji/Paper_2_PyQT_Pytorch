@@ -7,6 +7,7 @@
 # then uncomment the the following line
 
 
+
 import compile_ui
 from main_ui import Ui_MainWindow
 import sys ,  os

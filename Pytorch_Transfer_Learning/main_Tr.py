@@ -1,3 +1,10 @@
+# it is based on this toturial
+# https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html
+
+# A GUI for Pytorch and ptQT5
+# Designed by ALI.BABOLHAVAEJI
+# Detroit-MI-11/20/2019
+
 from __future__ import print_function
 from __future__ import division
 import torch
