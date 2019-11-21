@@ -203,7 +203,7 @@ if __name__ == '__main__':
 
     # Print the model we just instantiated
     print(model_ft)
-    #
+
 
 
     # Data augmentation and normalization for training

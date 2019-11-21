@@ -111,7 +111,7 @@ class AppWindow(QMainWindow):
         self.tools.save_object(path=loss_file,object=self.modelList)
         # print(self.modelList)
         # self.tools.plot_3d_(loss_file)
-        del (self.modelList)
+        # del (self.modelList)
         
         # print((self.modelList))
             # print('----')
