@@ -60,6 +60,7 @@ class Appwindow(QMainWindow):
 
         self.model = util.PandasModel(data_pd)
         self.ui.tableView.setModel(self.model)
+
         
         # util.Qlogging(self.ui.textBrowser,str(data_pd))
 

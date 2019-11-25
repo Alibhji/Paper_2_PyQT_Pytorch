@@ -17,13 +17,18 @@ def Qlogging(Text_browser_object, message=" ", type='info'):
     red = QColor(255, 0, 0)
     green = QColor(0, 100, 0)
 
-    if (type == 'info'):
+    if (type.lower()  in ['info' , 'green', 'g'] ):
         Text_browser_object.setTextColor(green)
         Text_browser_object.append(message)
-    if (type == 'red'):
+    elif (type.lower() in ['red' , 'r' , 'error']):
         Text_browser_object.setTextColor(red)
         Text_browser_object.append(message)
         Text_browser_object.setTextColor(black)
+    elif  (type.lower()  in ['b' , 'black']):
+        Text_browser_object.setTextColor(black)
+        Text_browser_object.append(message)
+        Text_browser_object.setTextColor(black)
+
 
 
 def import_yaml(path):
@@ -159,6 +164,7 @@ class PandasModel(QtCore.QAbstractTableModel):
         self._df.sort_values(colname, ascending=order == QtCore.Qt.AscendingOrder, inplace=True)
         self._df.reset_index(inplace=True, drop=True)
         self.layoutChanged.emit()
+
 
 
 
